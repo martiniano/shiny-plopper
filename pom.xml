@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>couk.nucmedone.shinyplopper</groupId>
+	<artifactId>shinyplopper</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>shinyplopper</name>
+	<description>Ionisation chamber reader and display</description>
+	<dependencies>
+		<dependency>
+			<groupId>org.rxtx</groupId>
+			<artifactId>rxtx</artifactId>
+			<version>2.1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.2</version>
+			<scope>system</scope>
+			<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
+		</dependency>
+	</dependencies>
+</project>
