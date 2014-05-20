@@ -1,4 +1,4 @@
-package couk.nucmedone.shinyplopper;
+package couk.nucmedone.shinyplopper.clickscreen;
 
 import javafx.geometry.Point2D;
 
