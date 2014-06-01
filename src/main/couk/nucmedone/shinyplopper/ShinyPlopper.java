@@ -30,6 +30,8 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javafx.application.Platform;
 import javafx.application.Preloader;
@@ -39,6 +41,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -50,6 +53,8 @@ import javax.imageio.ImageIO;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+
+import com.sun.javafx.geom.Rectangle;
 
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
@@ -173,17 +178,33 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 				stage.hide();
 			}
 		});
+		setSizes(closeBtn);
+
+		// Configure button
+		Button confBtn = new Button();
+		confBtn.setId("config-button");
+		confBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent arg0) {
+
+				HBox stuff = new HBox();
+				Label one = new Label("One");
+				Label two = new Label("Two");
+				stuff.getChildren().addAll(one, two);
+
+				Stage confStage = new Stage();
+				confStage.setTitle("My New Stage Title");
+				confStage.setScene(new Scene(stuff, 450, 450));
+				confStage.show();
+			}
+		});
+		setSizes(confBtn);
 
 		// Button layout
 		HBox buttons = new HBox();
-		closeBtn.setPrefHeight(12);
-		closeBtn.setMinHeight(12);
-		closeBtn.setMaxHeight(12);
-		closeBtn.setPrefWidth(12);
-		closeBtn.setMinWidth(12);
-		closeBtn.setMaxWidth(12);
-		buttons.getChildren().add(closeBtn);
-		buttons.setPadding(new Insets(10));
+		buttons.getChildren().addAll(confBtn, closeBtn);
+		buttons.setPadding(new Insets(10, 0, 10, 0));
+		buttons.setSpacing(5);
 		buttons.setAlignment(Pos.TOP_RIGHT);
 
 		// Calibrator screen area
@@ -201,6 +222,17 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.setScene(scene);
+
+	}
+
+	private void setSizes(Button button) {
+
+			button.setPrefHeight(16);
+			button.setMinHeight(16);
+			button.setMaxHeight(16);
+			button.setPrefWidth(16);
+			button.setMinWidth(16);
+			button.setMaxWidth(16);
 
 	}
 

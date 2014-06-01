@@ -21,6 +21,13 @@
 	-fx-font-size: 14px;
 }
 
+#config-button {
+	-fx-font-size: 1px;
+	-fx-background-color: null;
+	-fx-background-image: url("images/configure-3-16.png");
+	-fx-padding: 6 6 4 6;
+}
+
 #reading {
 	-fx-text-fill: white;
 	-fx-font: 60px "System";
@@ -43,13 +50,10 @@
 #window-close {
 	-fx-font-size: 1px;
 	-fx-background-color: null;
-	-fx-background-image: url("images/window-close.png");
+	-fx-background-image: url("images/application-exit-5-16.png");
 	-fx-padding: 6 6 4 6;
 }
 
-#window-close:hover {
-	-fx-background-image: url("images/window-close-over.png");
-}
 /*
 #window-close:focused {
     -fx-effect: dropshadow( three-pass-box , -fx-focus-color , 5, 0.7 , 0 , 0 );
