@@ -20,21 +20,29 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CRC35R {
 
 	public static final char A = 'A';
 	public static final int STX = 2;
 	public static final int ETX = 3;
 
-	String port = "com1";
-	int baudrate = 4800;
-	String parity = "N";
-	int charBits = 8;
-	int stopBit = 1;
+	protected Map<String, String> unitMap = new HashMap<String, String>();
 	
+	protected String port = "com1";
+	protected int baudrate = 4800;
+	protected String parity = "N";
+	protected int charBits = 8;
+	protected int stopBit = 1;
+
 	public double tolerance = 0.02;
 
 	public CRC35R() {
+		unitMap.put("3", "kBq");
+		unitMap.put("4", "kBq");
+		unitMap.put("5", "GBq");
 	}
 
 	public void read() {
@@ -52,21 +60,29 @@ public class CRC35R {
 
 		// STX
 		cmd.append(STX);
-		
-		
+
+		// Length of command (plus "A")
+		cmd.append(commandLength(chamber));
+
+		// Read
+		cmd.append(chamber);
+
+		// Append the checksum
+		int checksum = getReadChecksum(chamber);
+		cmd.append(checksum);
 
 	}
 
-	public void setNuclide() {
+	public void setNuclide(CharSequence nuclide) {
 
 		// Initialise chamber. The CRC35 unit can have up to 8 chambers
 		// attached. Just use first one.
 		String chamber = "I1";
 
 		// Nuclide string must be padded to 6 characters
-		StringBuffer nuclide = new StringBuffer("Tc99m");
-		while (nuclide.length() < 6) {
-			nuclide.append(" ");
+		StringBuffer nuclideBuf = new StringBuffer(nuclide);
+		while (nuclideBuf.length() < 6) {
+			nuclideBuf.append(" ");
 		}
 
 		// Build the command string to send to the Capintec.
@@ -76,7 +92,7 @@ public class CRC35R {
 		command.append(STX);
 
 		// Length of the chamber + nuclide and an "A"...? Don't ask!
-		command.append(chamber.length() + nuclide.length() + A);
+		command.append(commandLength(nuclide + chamber));
 
 		// Chamber and nuclide
 		command.append(chamber);
@@ -95,12 +111,25 @@ public class CRC35R {
 		// If we find spaces at start of data stream, resend the data.
 	}
 
-	private int getReadChecksum(){
-		return -1;
+	private int commandLength(CharSequence chamberCommand) {
+		return chamberCommand.length() + A;
 	}
-	
+
+	private int getReadChecksum(CharSequence chamber) {
+
+		int len = chamber.length();
+		int checksum = STX + len + 0x41;
+		for (int i = 0; i < len; i++) {
+			checksum += chamber.charAt(i);
+		}
+		checksum &= 0x7f;
+		checksum += 0x21;
+
+		return checksum;
+	}
+
 	/**
-	 * Create a checksum using the r of ecipe from the Capintec manual
+	 * Create a checksum using the recipe from the Capintec manual
 	 * 
 	 * @param character
 	 * @return
