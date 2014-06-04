@@ -63,23 +63,33 @@ import couk.nucmedone.shinyplopper.clickscreen.NativePlopper;
 public class ShinyPlopper extends Preloader implements ClickScreenListener,
 		ActionListener {
 
-	public ShinyPlopper() {
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	private PloppyConfig config;
+
 	private Stage stage;
+
 	private TrayIcon trayIcon;
 	private Robot robot;
-
 	private ClickScreen cst = null;
+
+	public ShinyPlopper() {
+
+		Platform.runLater(new Runnable() {
+			public void run() {
+				config = new PloppyConfig();
+			}
+		});
+
+		try {
+			robot = new Robot();
+		} catch (AWTException e) { 
+			e.printStackTrace();
+		}
+
+	}
 
 	public void actionPerformed(java.awt.event.ActionEvent e) {
 
@@ -186,16 +196,7 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 		confBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent arg0) {
-
-				HBox stuff = new HBox();
-				Label one = new Label("One");
-				Label two = new Label("Two");
-				stuff.getChildren().addAll(one, two);
-
-				Stage confStage = new Stage();
-				confStage.setTitle("My New Stage Title");
-				confStage.setScene(new Scene(stuff, 450, 450));
-				confStage.show();
+				config.show();
 			}
 		});
 		setSizes(confBtn);
@@ -222,17 +223,6 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.setScene(scene);
-
-	}
-
-	private void setSizes(Button button) {
-
-			button.setPrefHeight(16);
-			button.setMinHeight(16);
-			button.setMaxHeight(16);
-			button.setPrefWidth(16);
-			button.setMinWidth(16);
-			button.setMaxWidth(16);
 
 	}
 
@@ -277,6 +267,17 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 				type("text");
 			}
 		});
+
+	}
+
+	private void setSizes(Button button) {
+
+		button.setPrefHeight(16);
+		button.setMinHeight(16);
+		button.setMaxHeight(16);
+		button.setPrefWidth(16);
+		button.setMinWidth(16);
+		button.setMaxWidth(16);
 
 	}
 
