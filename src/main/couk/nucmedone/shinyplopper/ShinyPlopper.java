@@ -30,8 +30,6 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import javafx.application.Platform;
 import javafx.application.Preloader;
@@ -41,7 +39,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -54,10 +51,8 @@ import javax.imageio.ImageIO;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
-import com.sun.javafx.geom.Rectangle;
-
-import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
+import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
 import couk.nucmedone.shinyplopper.clickscreen.NativePlopper;
 
 public class ShinyPlopper extends Preloader implements ClickScreenListener,
