@@ -20,26 +20,52 @@
  */
 package couk.nucmedone.shinyplopper;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PloppyConfig {
 
 	private final Stage stage;
+	private final PloppyProps props;
 	
 	public PloppyConfig() {
 
-		HBox stuff = new HBox();
-		Label one = new Label("One");
-		Label two = new Label("Two");
-		stuff.getChildren().addAll(one, two);
+		props = new PloppyProps();
+		
+		// The serial device
+		HBox devBox = hbox("Serial device:", props.getDevice());
+		
+		// The chamber type
+//		ComboBox<String> chamberCombo = new ComboBox<String>();
+		HBox chamberBox = hbox("Chamber type:", props.getChamberType());
+		
+		// Line up everything vertically
+		VBox propsBox = new VBox();
+		propsBox.setPadding(new Insets(10));
+		propsBox.getChildren().addAll(devBox, chamberBox);
 
 		stage = new Stage();
 		stage.setTitle("My New Stage Title");
-		stage.setScene(new Scene(stuff, 450, 450));
+		stage.setScene(new Scene(propsBox, 450, 450));
 	
+	}
+	
+	private HBox hbox(String labeltext, String item){
+
+		HBox box = new HBox();
+//		box.setPadding(new Insets(10));
+		box.setSpacing(10);
+		
+		Label theLabel = new Label(labeltext);
+		Label val = new Label(item);
+
+		box.getChildren().addAll(theLabel, val);
+
+		return box;
 	}
 	
 	public void show(){
