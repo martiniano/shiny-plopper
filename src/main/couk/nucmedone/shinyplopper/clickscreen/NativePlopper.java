@@ -39,9 +39,10 @@ public class NativePlopper implements NativeKeyListener, NativeMouseListener {
 	public void nativeMouseClicked(NativeMouseEvent e) {
 		
 		Point point = e.getPoint();
-		System.out.println("Mouse click at: " + point);
+//		System.out.println("Mouse click at: " + point);
 		listener.screenClicked(point);
-	
+		listener.clickScreenOn(false);
+		
 	}
 
 	public void nativeMousePressed(NativeMouseEvent e) {
@@ -60,6 +61,7 @@ public class NativePlopper implements NativeKeyListener, NativeMouseListener {
         }
         
         if("F5".equals(text)){
+        	listener.clickScreenOn(true);
         	listener.showClickcreen();
         }
 

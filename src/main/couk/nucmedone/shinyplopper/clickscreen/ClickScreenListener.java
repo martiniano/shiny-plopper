@@ -24,6 +24,8 @@ import java.awt.Point;
 
 public interface ClickScreenListener {
 
+	public void clickScreenOn(boolean onOff);
+	
 	public void screenClickCancel();
 	
 	public void showClickcreen();

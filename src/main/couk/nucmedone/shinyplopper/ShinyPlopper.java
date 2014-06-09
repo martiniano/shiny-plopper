@@ -70,6 +70,8 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 	private Robot robot;
 	private ClickScreen cst = null;
 
+	private boolean clickerOn = false;
+
 	public ShinyPlopper() {
 
 		Platform.runLater(new Runnable() {
@@ -80,7 +82,7 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 
 		try {
 			robot = new Robot();
-		} catch (AWTException e) { 
+		} catch (AWTException e) {
 			e.printStackTrace();
 		}
 
@@ -247,21 +249,25 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 		Platform.runLater(new Runnable() {
 			public void run() {
 				cst.hide();
-				stage.show();
+				// stage.show();
 			}
 		});
 	}
 
 	public void screenClicked(Point point) {
 
-		screenClickCancel();
+		if (clickerOn) {
 
-		Platform.runLater(new Runnable() {
-			public void run() {
-				cst.hide();
-				type("text");
-			}
-		});
+			screenClickCancel();
+
+			Platform.runLater(new Runnable() {
+				public void run() {
+					cst.hide();
+					type("text");
+				}
+			});
+
+		}
 
 	}
 
@@ -291,7 +297,7 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 	public void start(Stage stage) {
 
 		// Register the application for keyboard and mouse events outside of the
-		// JRE
+		// JREtext
 		registerNativehooks();
 
 		// Create the initial GUI view
@@ -310,12 +316,6 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 
 	}
 
-	private void type(int i) {
-		robot.delay(40);
-		robot.keyPress(i);
-		robot.keyRelease(i);
-	}
-
 	private void type(String s) {
 		byte[] bytes = s.getBytes();
 		for (byte b : bytes) {
@@ -327,6 +327,10 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 			robot.keyPress(code);
 			robot.keyRelease(code);
 		}
+	}
+
+	public void clickScreenOn(boolean onOff) {
+		clickerOn = onOff;
 	}
 
 }
