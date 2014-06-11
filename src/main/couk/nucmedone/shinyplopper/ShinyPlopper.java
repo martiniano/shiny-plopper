@@ -51,12 +51,13 @@ import javax.imageio.ImageIO;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
+import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
 import couk.nucmedone.shinyplopper.clickscreen.NativePlopper;
 
-public class ShinyPlopper extends Preloader implements ClickScreenListener,
-		ActionListener {
+public class ShinyPlopper extends Preloader implements ActionListener,
+		ChamberListener, ClickScreenListener {
 
 	public static void main(String[] args) {
 		launch(args);
@@ -69,6 +70,7 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 	private TrayIcon trayIcon;
 	private Robot robot;
 	private ClickScreen cst = null;
+	private CharSequence activity = "";
 
 	private boolean clickerOn = false;
 
@@ -261,9 +263,10 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 			screenClickCancel();
 
 			Platform.runLater(new Runnable() {
+				
 				public void run() {
 					cst.hide();
-					type("text");
+					type(activity.toString());
 				}
 			});
 
@@ -331,6 +334,10 @@ public class ShinyPlopper extends Preloader implements ClickScreenListener,
 
 	public void clickScreenOn(boolean onOff) {
 		clickerOn = onOff;
+	}
+
+	public void onActivityUpdate(CharSequence activity) {
+		this.activity = activity;
 	}
 
 }

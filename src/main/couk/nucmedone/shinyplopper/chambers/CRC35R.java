@@ -20,30 +20,12 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class CRC35R {
+public class CRC35R extends AbstractChamber {
 
 	public static final char A = 'A';
 	public static final int STX = 2;
 	public static final int ETX = 3;
-
-	protected Map<String, String> unitMap = new HashMap<String, String>();
-	
-	protected String port = "com1";
-	protected int baudrate = 4800;
-	protected String parity = "N";
-	protected int charBits = 8;
-	protected int stopBit = 1;
-
-	public double tolerance = 0.02;
-
-	public CRC35R() {
-		unitMap.put("3", "kBq");
-		unitMap.put("4", "kBq");
-		unitMap.put("5", "GBq");
-	}
 
 	public void read() {
 
@@ -143,6 +125,13 @@ public class CRC35R {
 
 		return checksum;
 
+	}
+
+	@Override
+	public void setUnits() {
+		unitMap.put("3", "kBq");
+		unitMap.put("4", "kBq");
+		unitMap.put("5", "GBq");
 	}
 
 }
