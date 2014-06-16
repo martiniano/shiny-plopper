@@ -64,7 +64,7 @@ public class PloppyProps {
 		return p.getProperty(REFRESH_RATE, "0.25");
 	}
 	
-	public String getStartBits(){
+	public String getDataBits(){
 		return p.getProperty(START_BITS, "8");
 	}
 	
@@ -100,7 +100,7 @@ public class PloppyProps {
 		p.put(REFRESH_RATE, refreshRate);
 	}
 	
-	public void setStartBits(String startBits){
+	public void setDataBits(String startBits){
 		p.put(START_BITS, startBits);
 	}
 	
