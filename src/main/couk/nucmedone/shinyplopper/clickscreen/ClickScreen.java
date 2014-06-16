@@ -74,6 +74,7 @@ public class ClickScreen {
 	}
 	
 	public void show(){
+		window.toFront();
 		window.show();
 	}
 }
