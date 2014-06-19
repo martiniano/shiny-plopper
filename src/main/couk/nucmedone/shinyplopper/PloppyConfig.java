@@ -146,7 +146,7 @@ public class PloppyConfig {
 	}
 
 	private ObservableList<String> parities(){
-		return FXCollections.observableArrayList("Y", "N");
+		return FXCollections.observableArrayList(PloppyProps.PARITIES.keySet());
 	}
 
 	public void show() {
