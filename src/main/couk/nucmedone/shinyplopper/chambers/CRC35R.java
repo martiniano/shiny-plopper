@@ -20,6 +20,8 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import jssc.SerialPortException;
+
 
 public class CRC35R extends AbstractChamber {
 
@@ -52,6 +54,25 @@ public class CRC35R extends AbstractChamber {
 		// Append the checksum
 		int checksum = getReadChecksum(chamber);
 		cmd.append(checksum);
+
+		try {
+			// Send read command
+			open();
+			write(cmd);
+			// Fill the buffer until ETX found
+			StringBuffer sb = new StringBuffer(64);
+			int nextChar;
+			while((nextChar = getNextByte()) != ETX){
+				sb.append(nextChar);
+			}
+			close();
+
+			// Inform the listener about the info
+			update(sb);
+
+		} catch (SerialPortException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -90,7 +111,17 @@ public class CRC35R extends AbstractChamber {
 		// End text
 		command.append(ETX);
 
-		// If we find spaces at start of data stream, resend the data.
+		try {
+
+			write(command);
+
+
+			// If we find spaces at start of data stream, resend the data.
+
+
+		} catch (SerialPortException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private int commandLength(CharSequence chamberCommand) {

@@ -31,36 +31,71 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 
 	protected Map<String, String> unitMap = new HashMap<String, String>();
 
-	private SerialPort serialPort;
+	private ChamberListener listener;
+
+	private SerialPort serialPort = null;
 
 	private final PloppyProps props = new PloppyProps();
+
+	private final int baudRate;
+
+	private final int dataBits;
+
+	private final int stopBits;
+
+	private final int parity;
+
+	private final String port;
 
 	public AbstractChamber() {
 		super();
 		populateUnitMap();
 
-		String port = props.getDevice();
+		port = props.getDevice();
+		baudRate = Integer.parseInt(props.getBaudrate());
+		dataBits = Integer.parseInt(props.getDataBits());
+		stopBits = Integer.parseInt(props.getStopBits());
+		parity = props.getParityAsInteger();
 
 		if (port != null && !port.equals(PloppyProps.NO_DEVICE)) {
-
 			serialPort = new SerialPort(port);
-			try {
-
-				int baudRate = Integer.parseInt(props.getBaudrate());
-				int dataBits = Integer.parseInt(props.getDataBits());
-				int stopBits = Integer.parseInt(props.getStopBits());
-				int parity = props.getParityAsInteger();
-
-				serialPort.openPort();
-				serialPort.setParams(baudRate, dataBits, stopBits, parity);
-
-			} catch (SerialPortException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
-	public abstract void populateUnitMap();
+	public void addListener(ChamberListener listener){
+		this.listener = listener;
+	}
+
+	protected void close() throws SerialPortException{
+		serialPort.closePort();
+	}
+
+	protected int getNextByte() throws SerialPortException{
+		byte[] bytes = serialPort.readBytes(1);
+		return bytes[0];
+	}
+
+	protected void open() throws SerialPortException {
+
+		if (serialPort != null) {
+				serialPort.openPort();
+				serialPort.setParams(baudRate, dataBits, stopBits, parity);
+		}
+	}
+
+	protected abstract void populateUnitMap();
+
 	public abstract void read();
+
 	public abstract void setNuclide(CharSequence nuclide);
+
+	protected void update(CharSequence text){
+		listener.onActivityUpdate(text);
+	}
+
+	protected void write(CharSequence command) throws SerialPortException {
+		open();
+		serialPort.writeBytes(command.toString().getBytes());
+		close();
+	}
 }
