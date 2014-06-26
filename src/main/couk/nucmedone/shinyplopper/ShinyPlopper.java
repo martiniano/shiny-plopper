@@ -2,17 +2,17 @@
  * @author Neil J Thomson (njt@fishlegs.co.uk)
  *
  * Copyright (C) 2014 Neil J Thomson
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or (at
  * your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
@@ -28,11 +28,12 @@ import java.awt.Robot;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.net.URL;
 
+import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.application.Preloader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -54,9 +55,10 @@ import org.jnativehook.NativeHookException;
 import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
-import couk.nucmedone.shinyplopper.clickscreen.NativePlopper;
+import couk.nucmedone.shinyplopper.hooks.KeyPlopper;
+import couk.nucmedone.shinyplopper.hooks.MousePlopper;
 
-public class ShinyPlopper extends Preloader implements ActionListener,
+public class ShinyPlopper extends Application implements ActionListener,
 		ChamberListener, ClickScreenListener {
 
 	public static void main(String[] args) {
@@ -72,9 +74,16 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 	private ClickScreen cst = null;
 	private CharSequence activity = "";
 
-	private boolean clickerOn = false;
+	private final KeyPlopper keyPlopper;
+
+	private final MousePlopper mousePlopper;
+
+//	private boolean clickerOn = false;
 
 	public ShinyPlopper() {
+
+		keyPlopper = new KeyPlopper(this);
+		mousePlopper = new MousePlopper(this);
 
 		Platform.runLater(new Runnable() {
 			public void run() {
@@ -100,7 +109,7 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 
 	/**
 	 * Create an entry in the system tray
-	 * 
+	 *
 	 * @param stage
 	 */
 	private void createTrayIcon(final Stage stage, ActionListener listener) {
@@ -239,38 +248,39 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 			System.exit(1);
 		}
 
-		NativePlopper nativePlopper = new NativePlopper(this);
-
-		// Construct the native listeners and initialise
-		GlobalScreen.getInstance().addNativeKeyListener(nativePlopper);
-		GlobalScreen.getInstance().addNativeMouseListener(nativePlopper);
+		// Add the key listener straight away - always listen for action keys
+//		GlobalScreen.getInstance().addNativeKeyListener(keyPlopper);
 
 	}
 
 	public void screenClickCancel() {
 		Platform.runLater(new Runnable() {
 			public void run() {
+//				GlobalScreen.getInstance().removeNativeMouseListener(mousePlopper);
 				cst.hide();
 				// stage.show();
 			}
 		});
 	}
 
+	/**
+	 * The screen has been clicked... need to drop some text into someone's window
+	 */
 	public void screenClicked(Point point) {
 
-		if (clickerOn) {
+//		if (clickerOn) {
 
 			screenClickCancel();
 
 			Platform.runLater(new Runnable() {
-				
+
 				public void run() {
 					cst.hide();
 					type(activity.toString());
 				}
 			});
 
-		}
+//		}
 
 	}
 
@@ -289,6 +299,8 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 
 		Platform.runLater(new Runnable() {
 			public void run() {
+				// Listen for screen clicks
+//				GlobalScreen.getInstance().addNativeMouseListener(mousePlopper);
 				cst.show();
 				stage.hide();
 			}
@@ -300,7 +312,7 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 	public void start(Stage stage) {
 
 		// Register the application for keyboard and mouse events outside of the
-		// JREtext
+		// JRE
 		registerNativehooks();
 
 		// Create the initial GUI view
@@ -315,7 +327,7 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 		// Set GUI to minimise to tray when closed
 		Platform.setImplicitExit(false);
 
-		stage.show();
+		show();
 
 	}
 
@@ -332,12 +344,27 @@ public class ShinyPlopper extends Preloader implements ActionListener,
 		}
 	}
 
-	public void clickScreenOn(boolean onOff) {
-		clickerOn = onOff;
-	}
+//	public void clickScreenOn(boolean onOff) {
+//		clickerOn = onOff;
+//	}
 
 	public void onActivityUpdate(CharSequence activity) {
 		this.activity = activity;
 	}
 
+	public void queryChamber() {
+		show();
+//    	clickScreenOn(true);
+//    	showClickcreen();
+	}
+
+	public void show() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+				stage.show();
+				stage.toFront();
+				stage.requestFocus();
+			}
+		});
+	}
 }
