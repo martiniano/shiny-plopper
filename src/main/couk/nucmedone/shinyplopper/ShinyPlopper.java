@@ -53,6 +53,7 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
 import couk.nucmedone.shinyplopper.chambers.ChamberListener;
+import couk.nucmedone.shinyplopper.chambers.Reading;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
 import couk.nucmedone.shinyplopper.hooks.KeyPlopper;
@@ -78,12 +79,15 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	private final MousePlopper mousePlopper;
 
+	private final Reading reading;
+
 //	private boolean clickerOn = false;
 
 	public ShinyPlopper() {
 
 		keyPlopper = new KeyPlopper(this);
 		mousePlopper = new MousePlopper(this);
+		reading = new Reading();
 
 		Platform.runLater(new Runnable() {
 			public void run() {
