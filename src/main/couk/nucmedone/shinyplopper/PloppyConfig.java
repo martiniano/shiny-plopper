@@ -20,6 +20,7 @@
  */
 package couk.nucmedone.shinyplopper;
 
+import couk.nucmedone.shinyplopper.chambers.ChamberList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -44,7 +45,8 @@ public class PloppyConfig {
 
 		// The chamber type
 		// ComboBox<String> chamberCombo = new ComboBox<String>();
-		HBox chamberBox = hbox("Chamber type:", props.getChamberType(), chamberTypes());
+		HBox chamberBox = hbox("Chamber type:", props.getChamberType(),
+				chamberTypes());
 
 		// The serial device config
 		getPortNames();
@@ -56,13 +58,14 @@ public class PloppyConfig {
 		HBox toleranceBox = hbox("Tolerance", props.getTolerance());
 		HBox refreshBox = hbox("Refresh rate:", props.getRefreshRate());
 		HBox maxTimeBox = hbox("Maximum time:", props.getMaxTime());
+		HBox minReadsBox = hbox("Minimum reads:", props.getMinReads());
 
 		// Line up everything vertically
 		VBox propsBox = new VBox();
 		propsBox.setPadding(new Insets(10));
-		propsBox.getChildren()
-				.addAll(chamberBox, devBox, baudBox, parityBox, startBitsBox,
-						stopBitsBox, toleranceBox, refreshBox, maxTimeBox);
+		propsBox.getChildren().addAll(chamberBox, devBox, baudBox, parityBox,
+				startBitsBox, stopBitsBox, toleranceBox, refreshBox,
+				maxTimeBox, minReadsBox);
 
 		stage = new Stage();
 		stage.setTitle("My New Stage Title");
@@ -70,46 +73,41 @@ public class PloppyConfig {
 
 	}
 
-	private ObservableList<String> baudrates(){
+	private ObservableList<String> baudrates() {
 
-		return FXCollections.observableArrayList(
-				"" + SerialPort.BAUDRATE_110,
-				"" + SerialPort.BAUDRATE_300,
-				"" + SerialPort.BAUDRATE_600,
-				"" + SerialPort.BAUDRATE_1200,
-				"" + SerialPort.BAUDRATE_4800,
-				"" + SerialPort.BAUDRATE_9600,
-				"" + SerialPort.BAUDRATE_14400,
-				"" + SerialPort.BAUDRATE_19200,
-				"" + SerialPort.BAUDRATE_38400,
-				"" + SerialPort.BAUDRATE_57600,
-				"" + SerialPort.BAUDRATE_115200,
-				"" + SerialPort.BAUDRATE_128000,
-				"" + SerialPort.BAUDRATE_256000
-		);
+		return FXCollections.observableArrayList("" + SerialPort.BAUDRATE_110,
+				"" + SerialPort.BAUDRATE_300, "" + SerialPort.BAUDRATE_600, ""
+						+ SerialPort.BAUDRATE_1200, ""
+						+ SerialPort.BAUDRATE_4800, ""
+						+ SerialPort.BAUDRATE_9600, ""
+						+ SerialPort.BAUDRATE_14400, ""
+						+ SerialPort.BAUDRATE_19200, ""
+						+ SerialPort.BAUDRATE_38400, ""
+						+ SerialPort.BAUDRATE_57600, ""
+						+ SerialPort.BAUDRATE_115200, ""
+						+ SerialPort.BAUDRATE_128000, ""
+						+ SerialPort.BAUDRATE_256000);
 
 	}
 
-	private ObservableList<String> chamberTypes(){
+	private ObservableList<String> chamberTypes() {
 
-		return FXCollections.observableArrayList("Capintec CRC25R", "Capintec CRC35R");
+		return FXCollections.observableArrayList(ChamberList.chambers.keySet());
 
 	}
 
-	private ObservableList<String> databits(){
-		return FXCollections.observableArrayList(
-				"" + SerialPort.DATABITS_5,
-				"" + SerialPort.DATABITS_6,
-				"" + SerialPort.DATABITS_7,
-				"" + SerialPort.DATABITS_8);
+	private ObservableList<String> databits() {
+		return FXCollections.observableArrayList("" + SerialPort.DATABITS_5, ""
+				+ SerialPort.DATABITS_6, "" + SerialPort.DATABITS_7, ""
+				+ SerialPort.DATABITS_8);
 	}
 
 	private void getPortNames() {
 
-        String[] portNames = SerialPortList.getPortNames();
-        for(int i = 0; i < portNames.length; i++){
-            System.out.println(portNames[i]);
-        }
+		String[] portNames = SerialPortList.getPortNames();
+		for (int i = 0; i < portNames.length; i++) {
+			System.out.println(portNames[i]);
+		}
 
 	}
 
@@ -136,7 +134,7 @@ public class PloppyConfig {
 
 		Label theLabel = new Label(labeltext);
 		final ComboBox<String> combo = new ComboBox<String>(list);
-		if(item != null){
+		if (item != null) {
 			combo.setValue(item);
 		}
 
@@ -145,7 +143,7 @@ public class PloppyConfig {
 		return box;
 	}
 
-	private ObservableList<String> parities(){
+	private ObservableList<String> parities() {
 		return FXCollections.observableArrayList(PloppyProps.PARITIES.keySet());
 	}
 
@@ -154,11 +152,8 @@ public class PloppyConfig {
 	}
 
 	private ObservableList<String> stopBits() {
-		return FXCollections.observableArrayList(
-				"" + SerialPort.STOPBITS_1,
-				"" + SerialPort.STOPBITS_2,
-				"" + SerialPort.STOPBITS_1_5
-		);
+		return FXCollections.observableArrayList("" + SerialPort.STOPBITS_1, ""
+				+ SerialPort.STOPBITS_2, "" + SerialPort.STOPBITS_1_5);
 	}
 
 }

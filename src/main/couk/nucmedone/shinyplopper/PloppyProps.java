@@ -30,6 +30,7 @@ public class PloppyProps {
 
 	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.device";
 	public static final String CHAMBER_TYPE = "couk.nucmedone.shinyplopper.type";
+	public static final String MIN_READS = "couk.nucmedone.shinyplopper.min_reads";
 	public static final String MAX_TIME = "couk.nucmedone.shinyplopper.max_time";
 	public static final String NO_DEVICE = "No device selected";
 	public static final String PARITY = "couk.nucmedone.shinyplopper.parity";
@@ -72,6 +73,10 @@ public class PloppyProps {
 		return p.getProperty(MAX_TIME, "30");
 	}
 
+	public String getMinReads(){
+		return p.getProperty(MIN_READS, "16");
+	}
+
 	public String getParity(){
 		return p.getProperty(PARITY, "None");
 	}
@@ -110,6 +115,10 @@ public class PloppyProps {
 
 	public void setMaxTime(String maxTime){
 		p.put(MAX_TIME, maxTime);
+	}
+
+	public void setMinReads(String minReads){
+		p.put(MIN_READS, minReads);
 	}
 
 	public void setParity(String parity){

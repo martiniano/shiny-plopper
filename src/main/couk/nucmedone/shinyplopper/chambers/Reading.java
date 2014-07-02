@@ -20,17 +20,32 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import couk.nucmedone.shinyplopper.PloppyProps;
+
 
 public class Reading {
 
 	private final double[] readings;
 	private double mean = Double.NaN;
 	private double current = Double.NaN;
+	private double stability = Double.MAX_VALUE;
+	private double tolerance;
+	private int minReadings;
+	private boolean isStable = false;
 
 	public Reading() {
 
+		PloppyProps props = new PloppyProps();
+		try {
+			tolerance = Double.parseDouble(props.getTolerance());
+			minReadings = Integer.parseInt(props.getMinReads());
+		} catch(NumberFormatException nfe){
+			tolerance = 0.02;
+			minReadings = 16;
+		}
+
 		// New array of readings. Initialise as NaN to ease running average
-		readings = new double[16];
+		readings = new double[minReadings];
 		for (int i = 0; i < readings.length; i++) {
 			readings[i] = Double.NaN;
 		}
@@ -47,19 +62,25 @@ public class Reading {
 		current = reading;
 		readings[readings.length - 1] = reading;
 
-		// Calculate new average
+		// Calculate new average and stability
 		int count = 0;
 		int total = 0;
+		double max = -1 * Double.MAX_VALUE;
+		double min = Double.MAX_VALUE;
 
 		for (int i = 0; i < readings.length; i++) {
 			if (readings[i] != Double.NaN && reading != Double.NaN) {
 				count++;
 				total += reading;
+				max = readings[i] > max ? readings[i] : max;
+				min = readings[i] < min ? readings[i] : min;
 			}
 		}
 
 		if (count > 0) {
 			mean = total / count;
+			stability = (max - min)/mean;
+			isStable = !(stability > tolerance);
 		}
 
 	}
@@ -74,6 +95,10 @@ public class Reading {
 
 	public double getRunningAverage() {
 		return mean;
+	}
+
+	public boolean isStable(){
+		return isStable;
 	}
 
 }

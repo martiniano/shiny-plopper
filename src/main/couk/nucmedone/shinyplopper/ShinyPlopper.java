@@ -52,6 +52,9 @@ import javax.imageio.ImageIO;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
+import couk.nucmedone.shinyplopper.chambers.AbstractChamber;
+import couk.nucmedone.shinyplopper.chambers.Chamber;
+import couk.nucmedone.shinyplopper.chambers.ChamberList;
 import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.chambers.Reading;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
@@ -68,6 +71,8 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	private PloppyConfig config;
 
+	private PloppyProps props;
+
 	private Stage stage;
 
 	private TrayIcon trayIcon;
@@ -81,23 +86,46 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	private final Reading reading;
 
-//	private boolean clickerOn = false;
+	private AbstractChamber chamber = null;
+
+	// private boolean clickerOn = false;
 
 	public ShinyPlopper() {
 
+		// Global mouse and key events
 		keyPlopper = new KeyPlopper(this);
 		mousePlopper = new MousePlopper(this);
+
+		// Reading class
 		reading = new Reading();
 
+		// Prep the config
 		Platform.runLater(new Runnable() {
 			public void run() {
 				config = new PloppyConfig();
+				props = new PloppyProps();
 			}
 		});
 
+		// Robot class that will drop readings into other windows owned by the OS
 		try {
 			robot = new Robot();
 		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+
+		try{
+	    	String type = props.getChamberType();
+	    	String name = ChamberList.chambers.get(type);
+	        chamber = this.getClass().getClassLoader().loadClass(name).asSubclass(AbstractChamber.class).newInstance();
+	        // Go, go , go!
+	        chamber.start();
+	        chamber.read();
+	    } catch(InstantiationException e){
+	        e.printStackTrace();
+	    } catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
@@ -253,14 +281,15 @@ public class ShinyPlopper extends Application implements ActionListener,
 		}
 
 		// Add the key listener straight away - always listen for action keys
-//		GlobalScreen.getInstance().addNativeKeyListener(keyPlopper);
+		GlobalScreen.getInstance().addNativeKeyListener(keyPlopper);
 
 	}
 
 	public void screenClickCancel() {
 		Platform.runLater(new Runnable() {
 			public void run() {
-//				GlobalScreen.getInstance().removeNativeMouseListener(mousePlopper);
+				GlobalScreen.getInstance().removeNativeMouseListener(
+						mousePlopper);
 				cst.hide();
 				// stage.show();
 			}
@@ -268,23 +297,24 @@ public class ShinyPlopper extends Application implements ActionListener,
 	}
 
 	/**
-	 * The screen has been clicked... need to drop some text into someone's window
+	 * The screen has been clicked... need to drop some text into someone's
+	 * window
 	 */
 	public void screenClicked(Point point) {
 
-//		if (clickerOn) {
+		// if (clickerOn) {
 
-			screenClickCancel();
+		screenClickCancel();
 
-			Platform.runLater(new Runnable() {
+		Platform.runLater(new Runnable() {
 
-				public void run() {
-					cst.hide();
-					type(activity.toString());
-				}
-			});
+			public void run() {
+				cst.hide();
+				type(activity.toString());
+			}
+		});
 
-//		}
+		// }
 
 	}
 
@@ -304,7 +334,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 		Platform.runLater(new Runnable() {
 			public void run() {
 				// Listen for screen clicks
-//				GlobalScreen.getInstance().addNativeMouseListener(mousePlopper);
+				GlobalScreen.getInstance().addNativeMouseListener(mousePlopper);
 				cst.show();
 				stage.hide();
 			}
@@ -348,18 +378,20 @@ public class ShinyPlopper extends Application implements ActionListener,
 		}
 	}
 
-//	public void clickScreenOn(boolean onOff) {
-//		clickerOn = onOff;
-//	}
+	// public void clickScreenOn(boolean onOff) {
+	// clickerOn = onOff;
+	// }
 
 	public void onActivityUpdate(CharSequence activity) {
 		this.activity = activity;
+		// Do it again!
+		chamber.read();
 	}
 
 	public void queryChamber() {
 		show();
-//    	clickScreenOn(true);
-//    	showClickcreen();
+		// clickScreenOn(true);
+		// showClickcreen();
 	}
 
 	public void show() {
