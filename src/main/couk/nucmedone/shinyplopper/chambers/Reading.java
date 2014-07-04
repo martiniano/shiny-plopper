@@ -22,7 +22,14 @@ package couk.nucmedone.shinyplopper.chambers;
 
 import couk.nucmedone.shinyplopper.PloppyProps;
 
-
+/**
+ *
+ * @author neil
+ *
+ *         Simple class to make the current, average and previous readings
+ *         available. The readings can be reset by calling the reset() method.
+ *
+ */
 public class Reading {
 
 	private final double[] readings;
@@ -39,19 +46,22 @@ public class Reading {
 		try {
 			tolerance = Double.parseDouble(props.getTolerance());
 			minReadings = Integer.parseInt(props.getMinReads());
-		} catch(NumberFormatException nfe){
+		} catch (NumberFormatException nfe) {
 			tolerance = 0.02;
 			minReadings = 16;
 		}
 
 		// New array of readings. Initialise as NaN to ease running average
 		readings = new double[minReadings];
-		for (int i = 0; i < readings.length; i++) {
-			readings[i] = Double.NaN;
-		}
+		reset();
 
 	}
 
+	/**
+	 * Add the new current reading to the object
+	 *
+	 * @param reading
+	 */
 	public void addReading(double reading) {
 
 		// Shift readings "up one"
@@ -79,26 +89,56 @@ public class Reading {
 
 		if (count > 0) {
 			mean = total / count;
-			stability = (max - min)/mean;
+			stability = (max - min) / mean;
 			isStable = !(stability > tolerance);
 		}
 
 	}
 
+	/**
+	 * Simply return the current reading
+	 *
+	 * @return
+	 */
 	public double getCurrentReading() {
 		return current;
 	}
 
+	/**
+	 * Get all of the available readings
+	 *
+	 * @return
+	 */
 	public double[] getReadings() {
 		return readings;
 	}
 
+	/**
+	 * get the average of all of the available readings
+	 *
+	 * @return
+	 */
 	public double getRunningAverage() {
 		return mean;
 	}
 
-	public boolean isStable(){
+	/**
+	 * Query whether or not the range of readings is above a pre-determined
+	 * threshold (defaults to 2%)
+	 *
+	 * @return True if the range of readings differs by less than (say) 2% of the mean
+	 */
+	public boolean isStable() {
 		return isStable;
+	}
+
+	/**
+	 * Reset all held readings to NaN (not a number)
+	 */
+	public void reset() {
+		for (int i = 0; i < readings.length; i++) {
+			readings[i] = Double.NaN;
+		}
 	}
 
 }
