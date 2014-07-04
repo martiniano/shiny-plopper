@@ -384,6 +384,12 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	public void onActivityUpdate(CharSequence activity) {
 		this.activity = activity;
+		double currentActivity = Double.NaN;
+		try {
+			currentActivity = Double.parseDouble(activity.toString());
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+		}
 		// Do it again!
 		chamber.read();
 	}
