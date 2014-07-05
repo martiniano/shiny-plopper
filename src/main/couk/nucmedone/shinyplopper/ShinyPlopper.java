@@ -54,7 +54,7 @@ import org.jnativehook.NativeHookException;
 
 import couk.nucmedone.shinyplopper.chambers.AbstractChamber;
 import couk.nucmedone.shinyplopper.chambers.Chamber;
-import couk.nucmedone.shinyplopper.chambers.ChamberList;
+import couk.nucmedone.shinyplopper.chambers.Constants;
 import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.chambers.Reading;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
@@ -116,7 +116,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 		try{
 	    	String type = props.getChamberType();
-	    	String name = ChamberList.chambers.get(type);
+	    	String name = Constants.chambers.get(type);
 	        chamber = this.getClass().getClassLoader().loadClass(name).asSubclass(AbstractChamber.class).newInstance();
 	        // Go, go , go!
 	        chamber.start();

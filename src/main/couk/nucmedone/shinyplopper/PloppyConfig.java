@@ -20,7 +20,7 @@
  */
 package couk.nucmedone.shinyplopper;
 
-import couk.nucmedone.shinyplopper.chambers.ChamberList;
+import couk.nucmedone.shinyplopper.chambers.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -92,7 +92,7 @@ public class PloppyConfig {
 
 	private ObservableList<String> chamberTypes() {
 
-		return FXCollections.observableArrayList(ChamberList.chambers.keySet());
+		return FXCollections.observableArrayList(Constants.chambers.keySet());
 
 	}
 
