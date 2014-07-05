@@ -36,14 +36,17 @@ public class Constants {
 		chambers.put("Passive reader", AbstractChamber.class.getName());
 
 		units = new HashMap<String, Double>();
+		units.put("Bq", 1d);
 		units.put("kBq", exp(3d));
 		units.put("MBq", exp(6d));
 		units.put("GBq", exp(9d));
 		// Someone really going to put a TBq source in one of these things?
 		units.put("TBq", exp(12d));
 		// Account for poor taste :P
+		units.put("uCi", ciToBq(exp(-6d)));
 		units.put("mCi", ciToBq(exp(-3d)));
 		units.put("Ci", ciToBq(1d));
+		units.put("MCi", ciToBq(exp(3d))); // Unlikey in Nuclear Med
 	}
 
 	/**
