@@ -62,24 +62,28 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 		}
 	}
 
-	public void addListener(ChamberListener listener){
+	public void addListener(ChamberListener listener) {
 		this.listener = listener;
 	}
 
-	protected void close() throws SerialPortException{
+	protected void close() throws SerialPortException {
 		serialPort.closePort();
 	}
 
-	protected int getNextByte() throws SerialPortException{
+	protected int getNextByte() throws SerialPortException {
 		byte[] bytes = serialPort.readBytes(1);
 		return bytes[0];
+	}
+
+	public SerialPort getSerialPort(){
+		return serialPort;
 	}
 
 	protected void open() throws SerialPortException {
 
 		if (serialPort != null) {
-				serialPort.openPort();
-				serialPort.setParams(baudRate, dataBits, stopBits, parity);
+			serialPort.openPort();
+			serialPort.setParams(baudRate, dataBits, stopBits, parity);
 		}
 	}
 
@@ -89,13 +93,15 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 
 	public abstract void setNuclide(CharSequence nuclide);
 
-	protected void update(CharSequence text){
+	protected void update(CharSequence text) {
 		listener.onActivityUpdate(text);
 	}
 
 	protected void write(CharSequence command) throws SerialPortException {
-		open();
-		serialPort.writeBytes(command.toString().getBytes());
-		close();
+		if (serialPort != null) {
+			open();
+			serialPort.writeBytes(command.toString().getBytes());
+			close();
+		}
 	}
 }

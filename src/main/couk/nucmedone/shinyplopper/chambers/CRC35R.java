@@ -22,7 +22,6 @@ package couk.nucmedone.shinyplopper.chambers;
 
 import jssc.SerialPortException;
 
-
 public class CRC35R extends AbstractChamber {
 
 	public static final char A = 'A';
@@ -31,47 +30,53 @@ public class CRC35R extends AbstractChamber {
 
 	public void read() {
 
-		// From the CRC-35R manual:
-		// When reading a chamber the response from the Capintec will be in the
-		// format DRx,ABnnnnnn,aaaaaaU ABnnnnnn - isotope name or calibration
-		// number (a division is read as an "&") padded with spaces. aaaaaa is
-		// the activity string and U is the units, 3, 4, 5 for K,M & GBq
+		if (getSerialPort() != null) {
 
-		String chamber = "R1";
+			// From the CRC-35R manual:
+			// When reading a chamber the response from the Capintec will be in
+			// the
+			// format DRx,ABnnnnnn,aaaaaaU ABnnnnnn - isotope name or
+			// calibration
+			// number (a division is read as an "&") padded with spaces. aaaaaa
+			// is
+			// the activity string and U is the units, 3, 4, 5 for K,M & GBq
 
-		// Create command string
-		StringBuffer cmd = new StringBuffer(40);
+			String chamber = "R1";
 
-		// STX
-		cmd.append(STX);
+			// Create command string
+			StringBuffer cmd = new StringBuffer(40);
 
-		// Length of command (plus "A")
-		cmd.append(commandLength(chamber));
+			// STX
+			cmd.append(STX);
 
-		// Read
-		cmd.append(chamber);
+			// Length of command (plus "A")
+			cmd.append(commandLength(chamber));
 
-		// Append the checksum
-		int checksum = getReadChecksum(chamber);
-		cmd.append(checksum);
+			// Read
+			cmd.append(chamber);
 
-		try {
-			// Send read command
-			open();
-			write(cmd);
-			// Fill the buffer until ETX found
-			StringBuffer sb = new StringBuffer(64);
-			int nextChar;
-			while((nextChar = getNextByte()) != ETX){
-				sb.append(nextChar);
+			// Append the checksum
+			int checksum = getReadChecksum(chamber);
+			cmd.append(checksum);
+
+			try {
+				// Send read command
+				open();
+				write(cmd);
+				// Fill the buffer until ETX found
+				StringBuffer sb = new StringBuffer(64);
+				int nextChar;
+				while ((nextChar = getNextByte()) != ETX) {
+					sb.append(nextChar);
+				}
+				close();
+
+				// Inform the listener about the info
+				update(sb);
+
+			} catch (SerialPortException e) {
+				e.printStackTrace();
 			}
-			close();
-
-			// Inform the listener about the info
-			update(sb);
-
-		} catch (SerialPortException e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -115,9 +120,7 @@ public class CRC35R extends AbstractChamber {
 
 			write(command);
 
-
 			// If we find spaces at start of data stream, resend the data.
-
 
 		} catch (SerialPortException e) {
 			e.printStackTrace();
