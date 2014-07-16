@@ -164,7 +164,7 @@ public class CRC35R extends AbstractChamber {
 	@Override
 	public void populateUnitMap() {
 		unitMap.put("3", "kBq");
-		unitMap.put("4", "kBq");
+		unitMap.put("4", "MBq");
 		unitMap.put("5", "GBq");
 	}
 
