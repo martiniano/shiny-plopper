@@ -43,6 +43,7 @@ public class PloppyConfig {
 
 		props = new PloppyProps();
 
+		
 		// The chamber type
 		// ComboBox<String> chamberCombo = new ComboBox<String>();
 		HBox chamberBox = hbox("Chamber type:", props.getChamberType(),
@@ -50,7 +51,7 @@ public class PloppyConfig {
 
 		// The serial device config
 		getPortNames();
-		HBox devBox = hbox("Serial device:", props.getDevice());
+		HBox devBox = hbox("Serial device:", props.getDevice(), getPortNames());
 		HBox baudBox = hbox("Baud rate:", props.getBaudrate(), baudrates());
 		HBox parityBox = hbox("Parity", props.getParity(), parities());
 		HBox startBitsBox = hbox("Data bits:", props.getDataBits(), databits());
@@ -102,12 +103,9 @@ public class PloppyConfig {
 				+ SerialPort.DATABITS_8);
 	}
 
-	private void getPortNames() {
+	private ObservableList<String> getPortNames() {
 
-		String[] portNames = SerialPortList.getPortNames();
-		for (int i = 0; i < portNames.length; i++) {
-			System.out.println(portNames[i]);
-		}
+		return FXCollections.observableArrayList(SerialPortList.getPortNames());
 
 	}
 
