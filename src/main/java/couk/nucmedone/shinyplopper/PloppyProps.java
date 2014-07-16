@@ -66,7 +66,7 @@ public class PloppyProps {
 	}
 
 	public String getDevice(){
-		return p.getProperty(SERIAL_DEVICE, NO_DEVICE);
+		return p.getProperty(SERIAL_DEVICE, "COM1");//NO_DEVICE);
 	}
 
 	public String getMaxTime(){
