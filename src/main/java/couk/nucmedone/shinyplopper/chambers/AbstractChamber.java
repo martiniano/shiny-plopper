@@ -31,6 +31,12 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 
 	protected Map<String, String> unitMap = new HashMap<String, String>();
 
+	protected StringBuffer nuclide = new StringBuffer();
+
+	protected StringBuffer activity = new StringBuffer();
+
+	protected StringBuffer units = new StringBuffer();
+
 	private ChamberListener listener;
 
 	private SerialPort serialPort = null;
@@ -98,10 +104,8 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 	}
 
 	protected void write(CharSequence command) throws SerialPortException {
-		if (serialPort != null) {
-			open();
+		if (serialPort != null && command != null && command.length() > 0) {
 			serialPort.writeBytes(command.toString().getBytes());
-			close();
 		}
 	}
 }
