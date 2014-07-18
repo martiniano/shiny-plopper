@@ -43,7 +43,7 @@ public class PloppyConfig {
 
 		props = new PloppyProps();
 
-		
+
 		// The chamber type
 		// ComboBox<String> chamberCombo = new ComboBox<String>();
 		HBox chamberBox = hbox("Chamber type:", props.getChamberType(),
@@ -105,7 +105,10 @@ public class PloppyConfig {
 
 	private ObservableList<String> getPortNames() {
 
-		return FXCollections.observableArrayList(SerialPortList.getPortNames());
+		String[] ports = SerialPortList.getPortNames();
+		ObservableList<String> list = FXCollections.observableArrayList(ports);
+		list.add(0, PloppyProps.NO_DEVICE);
+		return list;
 
 	}
 
