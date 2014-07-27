@@ -20,21 +20,18 @@
  */
 package couk.nucmedone.shinyplopper;
 
-import couk.nucmedone.shinyplopper.chambers.Constants;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jssc.SerialPort;
 import jssc.SerialPortList;
+import couk.nucmedone.shinyplopper.chambers.Constants;
 
-public class PloppyConfig {
+public class PloppyConfig implements ConfigItemInterface {
 
 	private final Stage stage;
 	private final PloppyProps props;
@@ -46,20 +43,19 @@ public class PloppyConfig {
 
 		// The chamber type
 		// ComboBox<String> chamberCombo = new ComboBox<String>();
-		HBox chamberBox = hbox("Chamber type:", props.getChamberType(),
-				chamberTypes());
+		HBox chamberBox = new ConfigItem(PloppyProps.CHAMBER_TYPE, props.getChamberType(),
+				chamberTypes(), this);
 
 		// The serial device config
-		getPortNames();
-		HBox devBox = hbox("Serial device:", props.getDevice(), getPortNames());
-		HBox baudBox = hbox("Baud rate:", props.getBaudrate(), baudrates());
-		HBox parityBox = hbox("Parity", props.getParity(), parities());
-		HBox startBitsBox = hbox("Data bits:", props.getDataBits(), databits());
-		HBox stopBitsBox = hbox("Stop bits:", props.getStopBits(), stopBits());
-		HBox toleranceBox = hbox("Tolerance", props.getTolerance());
-		HBox refreshBox = hbox("Refresh rate:", props.getRefreshRate());
-		HBox maxTimeBox = hbox("Maximum time:", props.getMaxTime());
-		HBox minReadsBox = hbox("Minimum reads:", props.getMinReads());
+		HBox devBox = new ConfigItem(PloppyProps.SERIAL_DEVICE, props.getDevice(), getPortNames(), this);
+		HBox baudBox = new ConfigItem(PloppyProps.BAUD_RATE, props.getBaudrate(), baudrates(), this);
+		HBox parityBox = new ConfigItem(PloppyProps.PARITY, props.getParity(), parities(), this);
+		HBox startBitsBox = new ConfigItem(PloppyProps.DATA_BITS, props.getDataBits(), databits(), this);
+		HBox stopBitsBox = new ConfigItem(PloppyProps.STOP_BITS, props.getStopBits(), stopBits(), this);
+		HBox toleranceBox = new ConfigItem(PloppyProps.TOLERANCE, props.getTolerance(), this);
+		HBox refreshBox = new ConfigItem(PloppyProps.REFRESH_RATE, props.getRefreshRate(), this);
+		HBox maxTimeBox = new ConfigItem(PloppyProps.MAX_TIME, props.getMaxTime(), this);
+		HBox minReadsBox = new ConfigItem(PloppyProps.MIN_READS, props.getMinReads(), this);
 
 		// Line up everything vertically
 		VBox propsBox = new VBox();
@@ -112,38 +108,6 @@ public class PloppyConfig {
 
 	}
 
-	private HBox hbox(String labeltext, String item) {
-
-		HBox box = new HBox();
-		box.setPadding(new Insets(2));
-		box.setSpacing(10);
-
-		Label theLabel = new Label(labeltext);
-		Label val = new Label(item);
-
-		box.getChildren().addAll(theLabel, val);
-
-		return box;
-	}
-
-	private HBox hbox(String labeltext, String item, ObservableList<String> list) {
-
-		HBox box = new HBox();
-		box.setAlignment(Pos.CENTER_LEFT);
-		box.setPadding(new Insets(2));
-		box.setSpacing(10);
-
-		Label theLabel = new Label(labeltext);
-		final ComboBox<String> combo = new ComboBox<String>(list);
-		if (item != null) {
-			combo.setValue(item);
-		}
-
-		box.getChildren().addAll(theLabel, combo);
-
-		return box;
-	}
-
 	private ObservableList<String> parities() {
 		return FXCollections.observableArrayList(PloppyProps.PARITIES.keySet());
 	}
@@ -155,6 +119,12 @@ public class PloppyConfig {
 	private ObservableList<String> stopBits() {
 		return FXCollections.observableArrayList("" + SerialPort.STOPBITS_1, ""
 				+ SerialPort.STOPBITS_2, "" + SerialPort.STOPBITS_1_5);
+	}
+
+	@Override
+	public void onItemUpdate() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

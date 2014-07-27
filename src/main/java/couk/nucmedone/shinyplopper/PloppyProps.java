@@ -30,17 +30,31 @@ public class PloppyProps {
 
 	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.device";
 	public static final String CHAMBER_TYPE = "couk.nucmedone.shinyplopper.type";
+	public static final String DATA_BITS = "couk.nucmedone.shinyplopper.data_bits";
 	public static final String MIN_READS = "couk.nucmedone.shinyplopper.min_reads";
 	public static final String MAX_TIME = "couk.nucmedone.shinyplopper.max_time";
 	public static final String NO_DEVICE = "No device selected";
 	public static final String PARITY = "couk.nucmedone.shinyplopper.parity";
 	public static final String REFRESH_RATE = "couk.nucmedone.shinyplopper.refresh";
 	public static final String SERIAL_DEVICE = "couk.nucmedone.shinyplopper.device";
-	public static final String START_BITS = "couk.nucmedone.shinyplopper.start_bits";
 	public static final String STOP_BITS = "couk.nucmedone.shinyplopper.stop_bits";
 	public static final String TOLERANCE = "couk.nucmedone.shinyplopper.tolerance";
 
 	public static final Map<String, Integer> PARITIES = new HashMap<String, Integer>();
+
+	public static final Map<String, String> FRIENDLY_NAMES = new HashMap<String, String>();
+	static{
+		FRIENDLY_NAMES.put(BAUD_RATE, "Baud rate");
+		FRIENDLY_NAMES.put(CHAMBER_TYPE, "Chamber type");
+		FRIENDLY_NAMES.put(DATA_BITS, "Start bits");
+		FRIENDLY_NAMES.put(MIN_READS, "Minimum reads");
+		FRIENDLY_NAMES.put(MAX_TIME, "Maximum time");
+		FRIENDLY_NAMES.put(PARITY, "Parity");
+		FRIENDLY_NAMES.put(REFRESH_RATE, "Refresh rate");
+		FRIENDLY_NAMES.put(SERIAL_DEVICE, "Serial device");
+		FRIENDLY_NAMES.put(STOP_BITS, "Stop bits");
+		FRIENDLY_NAMES.put(TOLERANCE, "Tolerance");
+	}
 
 	private final Properties p;
 
@@ -66,7 +80,7 @@ public class PloppyProps {
 	}
 
 	public String getDevice(){
-		return p.getProperty(SERIAL_DEVICE, "COM1");//NO_DEVICE);
+		return p.getProperty(SERIAL_DEVICE, NO_DEVICE);
 	}
 
 	public String getMaxTime(){
@@ -90,7 +104,7 @@ public class PloppyProps {
 	}
 
 	public String getDataBits(){
-		return p.getProperty(START_BITS, "8");
+		return p.getProperty(DATA_BITS, "8");
 	}
 
 	public String getStopBits(){
@@ -130,7 +144,7 @@ public class PloppyProps {
 	}
 
 	public void setDataBits(String startBits){
-		p.put(START_BITS, startBits);
+		p.put(DATA_BITS, startBits);
 	}
 
 	public void setStopBits(String stopBits){

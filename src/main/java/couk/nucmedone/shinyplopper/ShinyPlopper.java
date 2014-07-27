@@ -114,20 +114,20 @@ public class ShinyPlopper extends Application implements ActionListener,
 			e.printStackTrace();
 		}
 
-		try{
-	    	String type = props.getChamberType();
-	    	String name = Constants.chambers.get(type);
-	        chamber = this.getClass().getClassLoader().loadClass(name).asSubclass(AbstractChamber.class).newInstance();
+//		try{
+//	    	String type = props.getChamberType();
+//	    	String name = Constants.chambers.get(type);
+//	        chamber = this.getClass().getClassLoader().loadClass(name).asSubclass(AbstractChamber.class).newInstance();
 	        // Go, go , go!
-	        chamber.start();
-	        chamber.read();
-	    } catch(InstantiationException e){
-	        e.printStackTrace();
-	    } catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+//	        chamber.start();
+//	        chamber.read();
+//	    } catch(InstantiationException e){
+//	        e.printStackTrace();
+//	    } catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		}
 
 	}
 
