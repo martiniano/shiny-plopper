@@ -115,6 +115,10 @@ public class PloppyProps {
 		return p.getProperty(TOLERANCE, "0.02");
 	}
 
+	public void set(String key, String value){
+		p.put(key, value);
+	}
+
 	public void setBaudrate(String baudrate){
 		p.put(BAUD_RATE, baudrate);
 	}

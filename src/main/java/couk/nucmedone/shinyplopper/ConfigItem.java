@@ -28,34 +28,44 @@ import javafx.scene.layout.HBox;
 
 class ConfigItem extends HBox {
 
-	private final ConfigItemInterface ears;
+	private final String name;
+	private ComboBox<String> combo;
 
-	public ConfigItem(String name, String item, ConfigItemInterface listener){
+	public ConfigItem(String name, String item){
 
-		init(name, item);
+		this.name = name;
+
+		init();
 
 		Label val = new Label(item);
 		getChildren().add(val);
-		ears = listener;
 
 	}
 
-	public ConfigItem(String name, String item, ObservableList<String> list, ConfigItemInterface listener){
+	public ConfigItem(String name, String item, ObservableList<String> list){
 
-		init(name, item);
+		this.name = name;
 
-		final ComboBox<String> combo = new ComboBox<String>(list);
+		init();
+
+		combo = new ComboBox<String>(list);
 		if (item != null) {
 			combo.setValue(item);
 		}
 
 		getChildren().add(combo);
 
-		ears = listener;
-
 	}
 
-	private void init(String name, String item){
+	public String getItem(){
+		return combo.getValue();
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	private void init(){
 
 		setPadding(new Insets(2));
 		setSpacing(10);
