@@ -74,7 +74,6 @@ public class PloppyConfig {
 		// Save props when hiding window
 		stage.setOnHiding(new EventHandler<WindowEvent>() {
 
-			@Override
 			public void handle(WindowEvent arg0) {
 
 				save();
