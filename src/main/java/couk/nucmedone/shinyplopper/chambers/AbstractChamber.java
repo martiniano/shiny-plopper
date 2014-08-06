@@ -25,7 +25,7 @@ import java.util.Map;
 
 import jssc.SerialPort;
 import jssc.SerialPortException;
-import couk.nucmedone.shinyplopper.PloppyProps;
+import couk.nucmedone.shinyplopper.config.PloppyProps;
 
 public abstract class AbstractChamber extends Thread implements Chamber {
 

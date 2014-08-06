@@ -18,48 +18,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-package couk.nucmedone.shinyplopper;
+package couk.nucmedone.shinyplopper.config;
 
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 
-class ConfigItem extends HBox {
+public abstract class ConfigItem extends HBox {
 
-	private final String name;
-	private ComboBox<String> combo;
+	protected final String name;
+	protected final String item;
 
 	public ConfigItem(String name, String item){
 
 		this.name = name;
+		this.item = item;
 
 		init();
 
-		Label val = new Label(item);
-		getChildren().add(val);
-
 	}
 
-	public ConfigItem(String name, String item, ObservableList<String> list){
-
-		this.name = name;
-
-		init();
-
-		combo = new ComboBox<String>(list);
-		if (item != null) {
-			combo.setValue(item);
-		}
-
-		getChildren().add(combo);
-
-	}
-
-	public String getItem(){
-		return combo.getValue();
-	}
+	public abstract String getItem();
 
 	public String getName(){
 		return name;

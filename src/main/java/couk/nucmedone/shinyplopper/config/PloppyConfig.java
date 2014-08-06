@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-package couk.nucmedone.shinyplopper;
+package couk.nucmedone.shinyplopper.config;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -108,14 +108,15 @@ public class PloppyConfig {
 
 	private void configItem(String name, String item) {
 
-		ConfigItem configItem = new ConfigItem(name, item);
+		StringConfigItem configItem = new StringConfigItem(name, item);
 		configItems.add(configItem);
 
 	}
 
 	private void configItem(String name, String item, ObservableList<String> list) {
 
-		ConfigItem configItem = new ConfigItem(name, item, list);
+		ComboConfigItem configItem = new ComboConfigItem(name, item);
+		configItem.setOptions(list);
 		configItems.add(configItem);
 
 	}
@@ -152,6 +153,8 @@ public class PloppyConfig {
 			props.set(name, value);
 
 		}
+
+		props.save();
 
 	}
 

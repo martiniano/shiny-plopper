@@ -20,7 +20,7 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
-import couk.nucmedone.shinyplopper.PloppyProps;
+import couk.nucmedone.shinyplopper.config.PloppyProps;
 
 /**
  *

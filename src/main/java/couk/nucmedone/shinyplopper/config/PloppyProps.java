@@ -18,8 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-package couk.nucmedone.shinyplopper;
+package couk.nucmedone.shinyplopper.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -28,7 +32,9 @@ import jssc.SerialPort;
 
 public class PloppyProps {
 
-	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.device";
+	private File file;
+
+	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.baud";
 	public static final String CHAMBER_TYPE = "couk.nucmedone.shinyplopper.type";
 	public static final String DATA_BITS = "couk.nucmedone.shinyplopper.data_bits";
 	public static final String MIN_READS = "couk.nucmedone.shinyplopper.min_reads";
@@ -60,7 +66,28 @@ public class PloppyProps {
 
 	public PloppyProps(){
 
-		p = System.getProperties();
+		p = new Properties();
+
+		// Get some saved properties
+		file = new File(System.getProperty("user.dir") + "/shinyplopper.config");
+		if (file.exists()) {
+
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+				p.load(fis);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (fis != null) {
+						fis.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		// Populate hashmap of parity items against integer values
 		PARITIES.put("None", SerialPort.PARITY_NONE);
@@ -113,6 +140,27 @@ public class PloppyProps {
 
 	public String getTolerance(){
 		return p.getProperty(TOLERANCE, "0.02");
+	}
+
+	public void save(){
+
+		FileOutputStream fos = null;
+		try {
+
+			fos = new FileOutputStream(file);
+			p.store(fos, " Shiny plopper save data ");
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(fos != null){
+					fos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void set(String key, String value){

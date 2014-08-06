@@ -59,6 +59,8 @@ import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.chambers.Reading;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
+import couk.nucmedone.shinyplopper.config.PloppyConfig;
+import couk.nucmedone.shinyplopper.config.PloppyProps;
 import couk.nucmedone.shinyplopper.hooks.KeyPlopper;
 import couk.nucmedone.shinyplopper.hooks.MousePlopper;
 
