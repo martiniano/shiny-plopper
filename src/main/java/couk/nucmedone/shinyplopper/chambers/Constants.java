@@ -33,7 +33,8 @@ public class Constants {
 
 		chambers = new HashMap<String, String>();
 		chambers.put("Capintec CRC35R", CRC35R.class.getName());
-		chambers.put("Passive reader", AbstractChamber.class.getName());
+		chambers.put("Capintec CRC15R", CRC15R.class.getName());
+		chambers.put("Passive reader", PassiveReader.class.getName());
 
 		units = new HashMap<String, Double>();
 		units.put("Bq", 1d);

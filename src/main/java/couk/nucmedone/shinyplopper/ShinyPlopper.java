@@ -104,32 +104,36 @@ public class ShinyPlopper extends Application implements ActionListener,
 		// Prep the config
 		Platform.runLater(new Runnable() {
 			public void run() {
+
 				config = new PloppyConfig();
 				props = new PloppyProps();
+
+				// Robot class that will drop readings into other windows owned
+				// by the OS
+				try {
+					robot = new Robot();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					String type = props.getChamberType();
+					String name = Constants.chambers.get(type);
+					chamber = this.getClass().getClassLoader().loadClass(name)
+							.asSubclass(AbstractChamber.class).newInstance();
+					// Go, go , go!
+					chamber.start();
+					chamber.read();
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+
 			}
 		});
-
-		// Robot class that will drop readings into other windows owned by the OS
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
-
-//		try{
-//	    	String type = props.getChamberType();
-//	    	String name = Constants.chambers.get(type);
-//	        chamber = this.getClass().getClassLoader().loadClass(name).asSubclass(AbstractChamber.class).newInstance();
-	        // Go, go , go!
-//	        chamber.start();
-//	        chamber.read();
-//	    } catch(InstantiationException e){
-//	        e.printStackTrace();
-//	    } catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		}
 
 	}
 
@@ -389,7 +393,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 		double currentActivity = Double.NaN;
 		try {
 			currentActivity = Double.parseDouble(activity.toString());
-		} catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 		// Do it again!
