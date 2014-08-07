@@ -31,6 +31,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -111,24 +114,32 @@ public class ShinyPlopper extends Application implements ActionListener,
 				// Robot class that will drop readings into other windows owned
 				// by the OS
 				try {
-					robot = new Robot();
-				} catch (AWTException e) {
-					e.printStackTrace();
-				}
 
-				try {
+					robot = new Robot();
+
 					String type = props.getChamberType();
 					String name = Constants.chambers.get(type);
 					chamber = this.getClass().getClassLoader().loadClass(name)
 							.asSubclass(AbstractChamber.class).newInstance();
 					// Go, go , go!
-					chamber.start();
-					chamber.read();
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
+
+					String refresh = props.getRefreshRate();
+					long refreshRate;
+					try {
+						refreshRate = Long.parseLong(refresh);
+					} catch (NumberFormatException nfe) {
+						System.out.println("Unable to set refreshrate "
+								+ refresh + ", defaulting to 1000ms");
+						refreshRate = 1000;
+					}
+
+					// Schedule
+					ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+					Runnable runner = chamber;
+					exec.scheduleAtFixedRate(chamber, refreshRate, refreshRate, TimeUnit.MILLISECONDS);
+
+				} catch (InstantiationException | IllegalAccessException
+						| ClassNotFoundException | AWTException e) {
 					e.printStackTrace();
 				}
 
