@@ -404,11 +404,11 @@ public class ShinyPlopper extends Application implements ActionListener,
 		double currentActivity = Double.NaN;
 		try {
 			currentActivity = Double.parseDouble(activity.toString());
+			reading.addReading(currentActivity);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
-		// Do it again!
-		chamber.read();
+
 	}
 
 	public void queryChamber() {

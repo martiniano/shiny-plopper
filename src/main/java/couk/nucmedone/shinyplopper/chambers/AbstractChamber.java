@@ -33,8 +33,6 @@ public abstract class AbstractChamber implements Chamber, Runnable {
 
 	protected StringBuffer nuclide = new StringBuffer();
 
-	protected StringBuffer activity = new StringBuffer();
-
 	protected StringBuffer units = new StringBuffer();
 
 	private ChamberListener listener;
