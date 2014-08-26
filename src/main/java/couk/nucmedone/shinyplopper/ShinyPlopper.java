@@ -92,6 +92,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 	private final Reading reading;
 
 	private AbstractChamber chamber = null;
+	private final ChamberListener listener = this;
 
 	// private boolean clickerOn = false;
 
@@ -122,6 +123,9 @@ public class ShinyPlopper extends Application implements ActionListener,
 					chamber = this.getClass().getClassLoader().loadClass(name)
 							.asSubclass(AbstractChamber.class).newInstance();
 					// Go, go , go!
+					
+					// listen for updates
+					chamber.addListener(listener);
 
 					String refresh = props.getRefreshRate();
 					long refreshRate;
