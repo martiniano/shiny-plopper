@@ -20,6 +20,8 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,19 +72,49 @@ public abstract class AbstractChamber implements Chamber, Runnable {
 		this.listener = listener;
 	}
 
+	/**
+	 * Close the serial port connection
+	 * 
+	 * @throws SerialPortException
+	 */
 	protected void close() throws SerialPortException {
 		serialPort.closePort();
 	}
 
+	/**
+	 * Read n bytes from the serial port
+	 * @param n
+	 * @return
+	 * @throws SerialPortException
+	 */
+	protected byte[] getBytes(int n) throws SerialPortException {
+		byte[] bytes = serialPort.readBytes(n);
+		return bytes;
+	}
+	
+	/**
+	 * Return the next byte from the serial port
+	 * @return
+	 * @throws SerialPortException
+	 */
 	protected int getNextByte() throws SerialPortException {
-		byte[] bytes = serialPort.readBytes(1);
-		return bytes[0];
+		return getBytes(1)[0];
 	}
 
+	/**
+	 * Returns the SerialPort object
+	 * 
+	 * @return
+	 */
 	public SerialPort getSerialPort(){
 		return serialPort;
 	}
 
+	/**
+	 * Open the serial port connection
+	 * 
+	 * @throws SerialPortException
+	 */
 	protected void open() throws SerialPortException {
 
 		if (serialPort != null) {
@@ -105,9 +137,22 @@ public abstract class AbstractChamber implements Chamber, Runnable {
 		listener.onActivityUpdate(text);
 	}
 
-	protected void write(CharSequence command) throws SerialPortException {
-		if (serialPort != null && command != null && command.length() > 0) {
-			serialPort.writeBytes(command.toString().getBytes());
+	/**
+	 * Writes a CharSequence (usually a String) to the serial port connection.
+	 * 
+	 * @param command
+	 * @throws SerialPortException
+	 */
+	protected void write(byte[] bytes) throws SerialPortException {
+		if (serialPort != null && bytes!= null && bytes.length > 0) {
+			serialPort.writeBytes(bytes);
 		}
+	}
+	
+	protected void write(ByteBuffer buffer) throws SerialPortException {
+		
+		// Get an array from the buffer disregarding anything after the 
+		// written data (by default the whole initialised array is returned)
+		write(buffer.array());
 	}
 }

@@ -20,56 +20,92 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.IntBuffer;
+
 import jssc.SerialPortException;
 
 public class CRC35R extends AbstractChamber {
 
 	public static final char A = 'A';
-	public static final int STX = 2;
-	public static final int ETX = 3;
+	public static final byte STX = 2;
+	public static final byte ETX = 3;
 
+	/**
+	 * Read the CRC-35R over serial port
+	 * 
+	 * From the CRC-35R manual:<br /><br />
+	 * 
+	 * When reading a chamber the response from the Capintec will be in
+	 * the format <i>DRx,ABnnnnnn,aaaaaaU</i> 
+	 * <ul><li><i>ABnnnnnn</i> is isotope name or calibration number (a 
+	 * division is read as an "&") padded with spaces.</li> 
+	 * <li><i>aaaaaa</i> is the activity string and U is the units, 3, 4, 5 for K,M &
+	 * GBq</li></ul>
+	 */
 	public void read() {
 
 		if (getSerialPort() != null) {
-
-			// From the CRC-35R manual:
-			// When reading a chamber the response from the Capintec will be in
-			// the
-			// format DRx,ABnnnnnn,aaaaaaU ABnnnnnn - isotope name or
-			// calibration
-			// number (a division is read as an "&") padded with spaces. aaaaaa
-			// is
-			// the activity string and U is the units, 3, 4, 5 for K,M & GBq
 
 			String chamber = "R1";
 
 			// Create command string
 			StringBuffer cmd = new StringBuffer(40);
+			CharBuffer chars = CharBuffer.allocate(40);
+			IntBuffer ints = IntBuffer.allocate(40);
+			ByteBuffer bytes = ByteBuffer.allocate(6);
 
 			// STX
 			cmd.append(STX);
+			ints.put(STX);
+//			chars.put(STX);
+			bytes.put((byte)STX);
 
 			// Length of command (plus "A")
 			cmd.append(commandLength(chamber));
+			ints.put(commandLength(chamber));
+			chars.put((char)commandLength(chamber));
+			bytes.put((byte)commandLength(chamber));
 
-			// Read
+			// Read command
 			cmd.append(chamber);
+			chars.put(chamber);
+			byte[] chamBytes = chamber.getBytes();
+			bytes.put(chamBytes);
+			for(int i = 0; i<chamber.length(); i++){
+				ints.put(chamBytes[i]);
+			}
 
 			// Append the checksum
 			int checksum = getReadChecksum(chamber);
 			cmd.append(checksum);
+			ints.put(checksum);
+			chars.put((char)checksum);
+			bytes.put((byte)checksum);
+			
+			// Finish the message
+			cmd.append(ETX);
+			ints.put(ETX);
+//			chars.put(ETX);
+			bytes.put(ETX);
 
 			try {
 				// Send read command
 				open();
-				write(cmd);
+				write(bytes);
+
 				// Fill the buffer until ETX found
 				StringBuffer sb = new StringBuffer(64);
+				IntBuffer returnBuffer = IntBuffer.allocate(64);
 				int nextChar;
 				while ((nextChar = getNextByte()) != ETX) {
 					sb.append(nextChar);
+					returnBuffer.put(nextChar);
 				}
 				close();
+				
+				getActivity(returnBuffer);
 
 				// Inform the listener about the info
 				update(sb);
@@ -79,6 +115,46 @@ public class CRC35R extends AbstractChamber {
 			}
 		}
 
+	}
+
+	/**
+	 * Get the activity, units, etc
+	 * 
+	 * From the CRC-35R manual:<br /><br />
+	 * 
+	 * When reading a chamber the response from the Capintec will be in
+	 * the format <i>DRx,ABnnnnnn,aaaaaaU</i> 
+	 * <ul><li><i>ABnnnnnn</i> is isotope name or calibration number (a 
+	 * division is read as an "&") padded with spaces.</li> 
+	 * <li><i>aaaaaa</i> is the activity string and U is the units, 3, 4, 5 for K,M &
+	 * GBq</li></ul>
+	 */
+	private void getActivity(IntBuffer returnBuffer) {
+		
+		int[] arr = returnBuffer.array();
+		StringBuffer buf = new StringBuffer();
+		
+		// skip until first comma to get the nuclide
+		int j=0;
+		while(returnBuffer.get(j++) != 44);
+		
+		// Nuclide until next comma
+		nuclide = new StringBuffer();
+		char res;
+		while((res = (char)returnBuffer.get(j++)) != 44){
+			nuclide.append(Character.valueOf(res));
+		}
+		
+		for(int i = 0; i < 6; i++){
+			
+			res = (char)returnBuffer.get(j++);
+			activity.append(res);
+			
+		}
+		
+		String bum = "";
+		System.out.println();
+		
 	}
 
 	public void setNuclide(CharSequence nuclide) {
@@ -118,7 +194,7 @@ public class CRC35R extends AbstractChamber {
 
 		try {
 
-			write(command);
+			write(command.toString().getBytes());
 
 			// If we find spaces at start of data stream, resend the data.
 
@@ -134,7 +210,9 @@ public class CRC35R extends AbstractChamber {
 	private int getReadChecksum(CharSequence chamber) {
 
 		int len = chamber.length();
-		int checksum = STX + len + 0x41;
+		int checksum = len + 0x41;
+		checksum += STX;
+		
 		for (int i = 0; i < len; i++) {
 			checksum += chamber.charAt(i);
 		}
