@@ -46,7 +46,7 @@ public class CRC15R extends AbstractChamber {
 			// Begin communication
 			open();
 			// Tell capintec we are about to start reading
-			write("@");
+			write("@".getBytes());
 
 			// Get the nuclide one character at a time by sending A,B,C...F
 			// A is decimal ASCII char 65
@@ -54,7 +54,7 @@ public class CRC15R extends AbstractChamber {
 			nuclide = dataBuffer(65, 70);
 
 			// Get the units (send "G")
-			write("G");
+			write("G".getBytes());
 			units = new StringBuffer();
 			nextChar = getNextByte();
 			units.append(unitMap.get(String.valueOf(nextChar)));
@@ -76,7 +76,7 @@ public class CRC15R extends AbstractChamber {
 		int nextChar;
 		StringBuffer buffer = new StringBuffer(6);
 		for (int c=first; c<last + 1; c++){
-			write(String.valueOf(c));
+			write(String.valueOf(c).getBytes());
 			nextChar = getNextByte();
 			buffer.append(nextChar);
 		}

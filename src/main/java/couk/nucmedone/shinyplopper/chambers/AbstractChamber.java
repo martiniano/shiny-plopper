@@ -20,6 +20,8 @@
  */
 package couk.nucmedone.shinyplopper.chambers;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,9 +141,16 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 	 * @param command
 	 * @throws SerialPortException
 	 */
-	protected void write(CharSequence command) throws SerialPortException {
-		if (serialPort != null && command != null && command.length() > 0) {
-			serialPort.writeBytes(command.toString().getBytes());
+	protected void write(byte[] bytes) throws SerialPortException {
+		if (serialPort != null && bytes!= null && bytes.length > 0) {
+			serialPort.writeBytes(bytes);
 		}
+	}
+	
+	protected void write(ByteBuffer buffer) throws SerialPortException {
+		
+		// Get an array from the buffer disregarding anything after the 
+		// written data (by default the whole initialised array is returned)
+		write(buffer.array());
 	}
 }
