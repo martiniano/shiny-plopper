@@ -28,18 +28,21 @@ public class CRC35R extends AbstractChamber {
 	public static final int STX = 2;
 	public static final int ETX = 3;
 
+	/**
+	 * Read the CRC-35R over serial port
+	 * 
+	 * From the CRC-35R manual:<br /><br />
+	 * 
+	 * When reading a chamber the response from the Capintec will be in
+	 * the format <i>DRx,ABnnnnnn,aaaaaaU</i> 
+	 * <ul><li><i>ABnnnnnn</i> is isotope name or calibration number (a 
+	 * division is read as an "&") padded with spaces.</li> 
+	 * <li><i>aaaaaa</i> is the activity string and U is the units, 3, 4, 5 for K,M &
+	 * GBq</li></ul>
+	 */
 	public void read() {
 
 		if (getSerialPort() != null) {
-
-			// From the CRC-35R manual:
-			// When reading a chamber the response from the Capintec will be in
-			// the
-			// format DRx,ABnnnnnn,aaaaaaU ABnnnnnn - isotope name or
-			// calibration
-			// number (a division is read as an "&") padded with spaces. aaaaaa
-			// is
-			// the activity string and U is the units, 3, 4, 5 for K,M & GBq
 
 			String chamber = "R1";
 
@@ -58,16 +61,23 @@ public class CRC35R extends AbstractChamber {
 			// Append the checksum
 			int checksum = getReadChecksum(chamber);
 			cmd.append(checksum);
+			
+			// Finish the message
+			cmd.append(ETX);
 
 			try {
 				// Send read command
 				open();
+//				close();
 				write(cmd);
+				getBytes(3);
+				close();
 				// Fill the buffer until ETX found
 				StringBuffer sb = new StringBuffer(64);
 				int nextChar;
 				while ((nextChar = getNextByte()) != ETX) {
 					sb.append(nextChar);
+					System.out.println(sb);
 				}
 				close();
 
