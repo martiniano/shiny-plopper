@@ -60,8 +60,7 @@ public class CRC15R extends AbstractChamber {
 			units.append(unitMap.get(String.valueOf(nextChar)));
 
 			// now get the activity - chars H (72) to K (75)
-			activity = dataBuffer(72, 75);
-
+			update(dataBuffer(72, 75));
 
 		} catch (SerialPortException e) {
 			e.printStackTrace();

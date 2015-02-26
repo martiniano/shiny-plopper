@@ -29,13 +29,11 @@ import jssc.SerialPort;
 import jssc.SerialPortException;
 import couk.nucmedone.shinyplopper.config.PloppyProps;
 
-public abstract class AbstractChamber extends Thread implements Chamber {
+public abstract class AbstractChamber implements Chamber, Runnable {
 
 	protected Map<String, String> unitMap = new HashMap<String, String>();
 
 	protected StringBuffer nuclide = new StringBuffer();
-
-	protected StringBuffer activity = new StringBuffer();
 
 	protected StringBuffer units = new StringBuffer();
 
@@ -128,6 +126,10 @@ public abstract class AbstractChamber extends Thread implements Chamber {
 	protected abstract void populateUnitMap();
 
 	public abstract void read();
+
+	public void run(){
+		read();
+	}
 
 	public abstract void setNuclide(CharSequence nuclide);
 

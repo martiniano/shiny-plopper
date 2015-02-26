@@ -75,7 +75,7 @@ public class Reading {
 		// Calculate new average and stability
 		int count = 0;
 		int total = 0;
-		double max = -1 * Double.MAX_VALUE;
+		double max = -1000000d;
 		double min = Double.MAX_VALUE;
 
 		for (int i = 0; i < readings.length; i++) {
