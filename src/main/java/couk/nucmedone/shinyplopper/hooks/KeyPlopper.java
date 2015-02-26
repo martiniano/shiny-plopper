@@ -53,7 +53,7 @@ public class KeyPlopper implements NativeKeyListener {
 
 		Platform.runLater(new Runnable() {
 			public void run() {
-				if (keyCode == NativeKeyEvent.VK_ESCAPE) {
+				if (keyCode == NativeKeyEvent.VC_ESCAPE) {
 					listener.screenClickCancel();
 				}
 

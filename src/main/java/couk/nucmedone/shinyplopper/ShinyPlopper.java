@@ -287,14 +287,14 @@ public class ShinyPlopper extends Application implements ActionListener,
 		}
 
 		// Add the key listener straight away - always listen for action keys
-		GlobalScreen.getInstance().addNativeKeyListener(keyPlopper);
+		GlobalScreen.addNativeKeyListener(keyPlopper);
 
 	}
 
 	public void screenClickCancel() {
 		Platform.runLater(new Runnable() {
 			public void run() {
-				GlobalScreen.getInstance().removeNativeMouseListener(
+				GlobalScreen.removeNativeMouseListener(
 						mousePlopper);
 				cst.hide();
 				// stage.show();
@@ -340,7 +340,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 		Platform.runLater(new Runnable() {
 			public void run() {
 				// Listen for screen clicks
-				GlobalScreen.getInstance().addNativeMouseListener(mousePlopper);
+				GlobalScreen.addNativeMouseListener(mousePlopper);
 				cst.show();
 				stage.hide();
 			}
