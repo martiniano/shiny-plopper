@@ -22,6 +22,6 @@ package couk.nucmedone.shinyplopper.chambers;
 
 public interface ChamberListener {
 
-	public void onActivityUpdate(CharSequence activity);
+	public void onActivityUpdate(CharSequence activity, CharSequence nuclide, CharSequence units);
 	
 }

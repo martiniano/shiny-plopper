@@ -30,7 +30,7 @@ public class CRC35R extends AbstractChamber {
 
 	public static final char A = 'A';
 	public static final byte STX = 2;
-	public static final byte ETX = 3;
+	public static final byte ETX = 3;	
 
 	/**
 	 * Read the CRC-35R over serial port
@@ -108,7 +108,7 @@ public class CRC35R extends AbstractChamber {
 				getActivity(returnBuffer);
 
 				// Inform the listener about the info
-				update(sb);
+				update();
 
 			} catch (SerialPortException e) {
 				e.printStackTrace();
@@ -131,9 +131,6 @@ public class CRC35R extends AbstractChamber {
 	 */
 	private void getActivity(IntBuffer returnBuffer) {
 		
-		int[] arr = returnBuffer.array();
-		StringBuffer buf = new StringBuffer();
-		
 		// skip until first comma to get the nuclide
 		int j=0;
 		while(returnBuffer.get(j++) != 44);
@@ -145,15 +142,16 @@ public class CRC35R extends AbstractChamber {
 			nuclide.append(Character.valueOf(res));
 		}
 		
+		//Next 7 chars for a nuclide (long requirement for In-113m)
+		activity = new StringBuffer();
 		for(int i = 0; i < 6; i++){
-			
 			res = (char)returnBuffer.get(j++);
 			activity.append(res);
-			
 		}
 		
-		String bum = "";
-		System.out.println();
+		// Get units from hashtable
+		char u = (char) returnBuffer.get(j);
+		String unit = unitMap.get(Character.toString(u));
 		
 	}
 

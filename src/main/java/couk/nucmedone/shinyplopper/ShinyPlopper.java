@@ -84,6 +84,8 @@ public class ShinyPlopper extends Application implements ActionListener,
 	private Robot robot;
 	private ClickScreen cst = null;
 	private CharSequence activity = "";
+	private CharSequence nuclide = "";
+	private CharSequence units = "";
 
 	private final KeyPlopper keyPlopper;
 
@@ -403,8 +405,12 @@ public class ShinyPlopper extends Application implements ActionListener,
 	// clickerOn = onOff;
 	// }
 
-	public void onActivityUpdate(CharSequence activity) {
+	public void onActivityUpdate(CharSequence activity, CharSequence nuclide, CharSequence units) {
+		
 		this.activity = activity;
+		this.nuclide = nuclide;
+		this.units = units;
+		
 		double currentActivity = Double.NaN;
 		try {
 			currentActivity = Double.parseDouble(activity.toString());

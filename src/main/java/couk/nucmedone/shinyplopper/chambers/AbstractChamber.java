@@ -34,6 +34,8 @@ public abstract class AbstractChamber implements Chamber, Runnable {
 	protected Map<String, String> unitMap = new HashMap<String, String>();
 
 	protected StringBuffer nuclide = new StringBuffer();
+	
+	protected StringBuffer activity;
 
 	protected StringBuffer units = new StringBuffer();
 
@@ -133,8 +135,12 @@ public abstract class AbstractChamber implements Chamber, Runnable {
 
 	public abstract void setNuclide(CharSequence nuclide);
 
-	protected void update(CharSequence text) {
-		listener.onActivityUpdate(text);
+	protected void update() {
+		
+		String u = units.toString().trim();
+		String nuc = nuclide.toString().trim();
+		String a = activity.toString().trim();
+		listener.onActivityUpdate(a, nuc, u);
 	}
 
 	/**
