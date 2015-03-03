@@ -23,6 +23,8 @@ package couk.nucmedone.shinyplopper.chambers;
 import java.util.HashMap;
 import java.util.Map;
 
+import couk.nucmedone.shinyplopper.TestChamber;
+
 public class Constants {
 
 	public static final Map<String, String> chambers;
@@ -35,6 +37,7 @@ public class Constants {
 		chambers.put("Capintec CRC35R", CRC35R.class.getName());
 		chambers.put("Capintec CRC15R", CRC15R.class.getName());
 		chambers.put("Passive reader", PassiveReader.class.getName());
+		chambers.put("Random numbers", TestChamber.class.getName());
 
 		units = new HashMap<String, Double>();
 		units.put("Bq", 1d);
