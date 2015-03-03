@@ -84,6 +84,8 @@ public class ShinyPlopper extends Application implements ActionListener,
 	private Robot robot;
 	private ClickScreen cst = null;
 	private CharSequence activity = "";
+	private CharSequence nuclide = "";
+	private CharSequence units = "";
 
 	private final KeyPlopper keyPlopper;
 
@@ -93,6 +95,8 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	private AbstractChamber chamber = null;
 	private final ChamberListener listener = this;
+
+	private CalibratorScreen cal = null;
 
 	// private boolean clickerOn = false;
 
@@ -269,8 +273,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 		buttons.setSpacing(5);
 		buttons.setAlignment(Pos.TOP_RIGHT);
 
-		// Calibrator screen area
-		CalibratorScreen cal = new CalibratorScreen();
+		cal = new CalibratorScreen();
 
 		// Borderpane for basic app alignment
 		BorderPane borderpane = new BorderPane();
@@ -403,12 +406,28 @@ public class ShinyPlopper extends Application implements ActionListener,
 	// clickerOn = onOff;
 	// }
 
-	public void onActivityUpdate(CharSequence activity) {
+	public void onActivityUpdate(CharSequence activity, CharSequence nuclide, CharSequence units) {
+		
 		this.activity = activity;
+		this.nuclide = nuclide;
+		this.units = units;
+		
 		double currentActivity = Double.NaN;
 		try {
 			currentActivity = Double.parseDouble(activity.toString());
 			reading.addReading(currentActivity);
+			
+			if(cal != null){
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						cal.setReadings(reading);
+						cal.update();
+					}
+					
+				});
+			}
+			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}

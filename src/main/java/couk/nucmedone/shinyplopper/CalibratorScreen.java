@@ -20,6 +20,7 @@
  */
 package couk.nucmedone.shinyplopper;
 
+import couk.nucmedone.shinyplopper.chambers.Reading;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -31,24 +32,22 @@ import javafx.scene.layout.VBox;
 public class CalibratorScreen {
 
 	private GridPane grid = new GridPane();
+	private Reading readings = null;
+	private Label units = new Label("MBq");
+	private Label activity = new Label("1000.0");
+	private Label[] previousLists = new Label[10];
 
 	public CalibratorScreen(){
 		
         // Previous calibrator readings
-        VBox previousVBox = new VBox();
-        Label[] previousList = new Label[10];
+        VBox previousVBox = new VBox();        
         for(int i=0; i<10; i++){
-        	previousList[i] = new Label("Reading: " + i);
-        	previousList[i].setId("previous-readings");
-        	previousVBox.getChildren().add(previousList[i]);
+        	previousLists[i] = new Label("0 MBq" + i);
+        	previousLists[i].setId("previous-readings");
+        	previousVBox.getChildren().add(previousLists[i]);
         }
-        
-        // Calibrator reading
-        Label reading = new Label("1000.0");
-        reading.setId("reading");
-        
-        // Units
-        Label units = new Label("MBq");
+                
+        activity.setId("reading");
         units.setId("units");
         
         // Reading and units together... extra box for units to set bottom padding
@@ -59,7 +58,7 @@ public class CalibratorScreen {
         
         HBox readWithUnits = new HBox();
         readWithUnits.setAlignment(Pos.BOTTOM_LEFT);
-        readWithUnits.getChildren().addAll(reading, unitBox);
+        readWithUnits.getChildren().addAll(activity, unitBox);
         
         grid.setId("reading-pane");
         grid.setHgap(10);
@@ -75,6 +74,32 @@ public class CalibratorScreen {
 	
 	public Pane getPane(){
 		return grid;
+	}
+	
+	public void setReadings(Reading readings){
+		this.readings = readings;
+	}
+	
+	public void update(){
+		
+		final double currentReading = readings.getCurrentReading();
+		final double read = Reading.roundToSignificantFigures(currentReading, 5);
+		final String text = Double.toString(read);
+		
+		activity.setText(text);
+		
+		final double[] prevs = readings.getReadings();
+		
+		for (int i=0; i<previousLists.length - 1; i++){
+			
+			final double last = Reading.roundToSignificantFigures(prevs[i], 5);
+			
+			StringBuffer buff = new StringBuffer(Double.toString(last));
+			
+			
+//			previousLists[i].setText(string);
+		}
+		
 	}
 	
 }
