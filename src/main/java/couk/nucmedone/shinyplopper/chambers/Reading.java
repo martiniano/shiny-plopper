@@ -65,12 +65,12 @@ public class Reading {
 	public void addReading(double reading) {
 
 		// Shift readings "up one"
-		for (int i = 0; i < readings.length - 1; i++) {
-			readings[i] = readings[i + 1];
+		for (int i = readings.length - 1; i>0;) {
+			readings[i] = readings[--i];
 		}
 
 		current = reading;
-		readings[readings.length - 1] = reading;
+		readings[0] = reading;
 
 		// Calculate new average and stability
 		int count = 0;
@@ -140,5 +140,21 @@ public class Reading {
 			readings[i] = Double.NaN;
 		}
 	}
+	
+	public static double roundToSignificantFigures(double num, int n) {
+
+		if(num == 0) {
+	        return 0;
+	    }
+
+	    final double d = Math.ceil(Math.log10(num < 0 ? -num: num));
+	    final int power = n - (int) d;
+
+	    final double magnitude = Math.pow(10, power);
+	    final long shifted = Math.round(num*magnitude);
+	    
+	    return shifted/magnitude;
+	}
+
 
 }
