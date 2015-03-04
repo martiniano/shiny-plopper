@@ -1,6 +1,7 @@
 package couk.nucmedone.shinyplopper;
 
 import couk.nucmedone.shinyplopper.chambers.AbstractChamber;
+import couk.nucmedone.shinyplopper.chambers.Reading;
 
 public class TestChamber extends AbstractChamber {
 
@@ -22,6 +23,7 @@ public class TestChamber extends AbstractChamber {
 		// MBq in the range 990-1010 MBq
 		double rnd = Math.random() * 20.0;
 		rnd = 1010 - rnd;
+		rnd = Reading.roundToSignificantFigures(rnd, 6);
 		activity = new StringBuffer(Double.toString(rnd));
 		update();
 
