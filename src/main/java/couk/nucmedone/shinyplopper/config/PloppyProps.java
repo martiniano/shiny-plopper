@@ -22,8 +22,10 @@ package couk.nucmedone.shinyplopper.config;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -49,7 +51,7 @@ public class PloppyProps {
 	public static final Map<String, Integer> PARITIES = new HashMap<String, Integer>();
 
 	public static final Map<String, String> FRIENDLY_NAMES = new HashMap<String, String>();
-	static{
+	static {
 		FRIENDLY_NAMES.put(BAUD_RATE, "Baud rate");
 		FRIENDLY_NAMES.put(CHAMBER_TYPE, "Chamber type");
 		FRIENDLY_NAMES.put(DATA_BITS, "Start bits");
@@ -64,9 +66,9 @@ public class PloppyProps {
 
 	private final Properties p;
 
-	public PloppyProps(){
+	public PloppyProps() {
 
-		p = new Properties();
+		p = load();
 
 		// Get some saved properties
 		file = new File(System.getProperty("user.dir") + "/shinyplopper.config");
@@ -98,51 +100,81 @@ public class PloppyProps {
 
 	}
 
-	public String getBaudrate(){
+	public String getBaudrate() {
 		return p.getProperty(BAUD_RATE, "4800");
 	}
 
-	public String getChamberType(){
-		return p.getProperty(CHAMBER_TYPE, "Capintec CRC35R");
+	public String getChamberType() {
+		return p.getProperty(CHAMBER_TYPE, "Random Numbers"); // "Capintec CRC35R");
 	}
 
-	public String getDevice(){
+	public String getDevice() {
 		return p.getProperty(SERIAL_DEVICE, NO_DEVICE);
 	}
 
-	public String getMaxTime(){
+	public String getMaxTime() {
 		return p.getProperty(MAX_TIME, "30");
 	}
 
-	public String getMinReads(){
+	public String getMinReads() {
 		return p.getProperty(MIN_READS, "16");
 	}
 
-	public String getParity(){
+	public String getParity() {
 		return p.getProperty(PARITY, "None");
 	}
 
-	public int getParityAsInteger(){
+	public int getParityAsInteger() {
 		return PARITIES.get(getParity());
 	}
 
-	public String getRefreshRate(){
+	public String getRefreshRate() {
 		return p.getProperty(REFRESH_RATE, "0.25");
 	}
 
-	public String getDataBits(){
+	public String getDataBits() {
 		return p.getProperty(DATA_BITS, "8");
 	}
 
-	public String getStopBits(){
+	public String getStopBits() {
 		return p.getProperty(STOP_BITS, "1");
 	}
 
-	public String getTolerance(){
+	public String getTolerance() {
 		return p.getProperty(TOLERANCE, "0.02");
 	}
 
-	public void save(){
+	private Properties load() {
+
+		Properties props = new Properties();
+		InputStream is = null;
+
+		// First try loading from the current directory
+		try {
+			File f = new File("sp.properties");
+			is = new FileInputStream(f);
+		} catch (FileNotFoundException e) {
+			// is remains null
+		}
+
+		try {
+			if (is == null) {
+				// Try loading from classpath
+				is = getClass().getResourceAsStream("sp.properties");
+			}
+
+			// Try loading properties from the file (if found)
+			props.load(is);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return props;
+		
+	}
+
+	public void save() {
 
 		FileOutputStream fos = null;
 		try {
@@ -154,7 +186,7 @@ public class PloppyProps {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(fos != null){
+				if (fos != null) {
 					fos.close();
 				}
 			} catch (IOException e) {
@@ -163,47 +195,47 @@ public class PloppyProps {
 		}
 	}
 
-	public void set(String key, String value){
+	public void set(String key, String value) {
 		p.put(key, value);
 	}
 
-	public void setBaudrate(String baudrate){
+	public void setBaudrate(String baudrate) {
 		p.put(BAUD_RATE, baudrate);
 	}
 
-	public void setChamberType(String chamberType){
+	public void setChamberType(String chamberType) {
 		p.put(CHAMBER_TYPE, chamberType);
 	}
 
-	public void setDevice(String device){
+	public void setDevice(String device) {
 		p.put(SERIAL_DEVICE, device);
 	}
 
-	public void setMaxTime(String maxTime){
+	public void setMaxTime(String maxTime) {
 		p.put(MAX_TIME, maxTime);
 	}
 
-	public void setMinReads(String minReads){
+	public void setMinReads(String minReads) {
 		p.put(MIN_READS, minReads);
 	}
 
-	public void setParity(String parity){
+	public void setParity(String parity) {
 		p.put(PARITY, parity);
 	}
 
-	public void setRefreshRate(String refreshRate){
+	public void setRefreshRate(String refreshRate) {
 		p.put(REFRESH_RATE, refreshRate);
 	}
 
-	public void setDataBits(String startBits){
+	public void setDataBits(String startBits) {
 		p.put(DATA_BITS, startBits);
 	}
 
-	public void setStopBits(String stopBits){
+	public void setStopBits(String stopBits) {
 		p.put(STOP_BITS, stopBits);
 	}
 
-	public void setTolerance(String tolerance){
+	public void setTolerance(String tolerance) {
 		p.put(TOLERANCE, tolerance);
 	}
 
