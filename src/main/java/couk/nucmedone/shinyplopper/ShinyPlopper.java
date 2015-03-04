@@ -334,6 +334,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 			public void run() {
 				cst.hide();
+				System.out.println(activity.toString());
 				type(activity.toString());
 			}
 		});
@@ -437,7 +438,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 	public void queryChamber() {
 		show();
 		// clickScreenOn(true);
-		// showClickcreen();
+		 showClickcreen();
 	}
 
 	public void show() {
