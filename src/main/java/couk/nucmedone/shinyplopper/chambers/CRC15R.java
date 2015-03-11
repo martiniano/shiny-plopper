@@ -51,7 +51,8 @@ public class CRC15R extends AbstractChamber {
 			// Get the nuclide one character at a time by sending A,B,C...F
 			// A is decimal ASCII char 65
 			int nextChar;
-			nuclide = dataBuffer(65, 70);
+			nuclide = new StringBuffer();
+			nuclide.append(dataBuffer(65, 70));
 
 			// Get the units (send "G")
 			write("G".getBytes());
@@ -60,7 +61,9 @@ public class CRC15R extends AbstractChamber {
 			units.append(unitMap.get(String.valueOf(nextChar)));
 
 			// now get the activity - chars H (72) to K (75)
-			update(dataBuffer(72, 75));
+			activity = new StringBuffer();
+			activity.append(dataBuffer(72, 75));
+			update();
 
 		} catch (SerialPortException e) {
 			e.printStackTrace();
