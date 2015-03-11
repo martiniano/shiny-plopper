@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import couk.nucmedone.shinyplopper.chambers.Constants;
 import jssc.SerialPort;
 
 public class PloppyProps {
@@ -68,28 +69,8 @@ public class PloppyProps {
 
 	public PloppyProps() {
 
+		// Get saved props
 		p = load();
-
-		// Get some saved properties
-		file = new File(System.getProperty("user.dir") + "/shinyplopper.config");
-		if (file.exists()) {
-
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(file);
-				p.load(fis);
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (fis != null) {
-						fis.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 
 		// Populate hashmap of parity items against integer values
 		PARITIES.put("None", SerialPort.PARITY_NONE);
@@ -105,7 +86,7 @@ public class PloppyProps {
 	}
 
 	public String getChamberType() {
-		return p.getProperty(CHAMBER_TYPE, "Random Numbers"); // "Capintec CRC35R");
+		return p.getProperty(CHAMBER_TYPE, Constants.CHAM_RND); // "Capintec CRC35R");
 	}
 
 	public String getDevice() {
@@ -149,6 +130,10 @@ public class PloppyProps {
 		Properties props = new Properties();
 		InputStream is = null;
 
+		// User directory
+		// file = new File(System.getProperty("user.dir") +
+		// "/shinyplopper.config");
+
 		// First try loading from the current directory
 		try {
 			File f = new File("sp.properties");
@@ -164,14 +149,24 @@ public class PloppyProps {
 			}
 
 			// Try loading properties from the file (if found)
-			props.load(is);
-			
+			if (is != null) {
+				props.load(is);
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		return props;
-		
+
 	}
 
 	public void save() {

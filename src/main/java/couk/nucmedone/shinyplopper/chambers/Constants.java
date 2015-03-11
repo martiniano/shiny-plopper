@@ -27,17 +27,26 @@ import couk.nucmedone.shinyplopper.TestChamber;
 
 public class Constants {
 
+	public static final String CHAM_RND = "Random numbers";
+
+	public static final String CHAM_READER = "Passive reader";
+
+	public static final String CHAM_CRC15 = "Capintec CRC15R";
+
+	public static final String CHAM_CRC35 = "Capintec CRC35R";
+
 	public static final Map<String, String> chambers;
 
 	public static final Map<String, Double> units;
+	
 
 	static {
 
 		chambers = new HashMap<String, String>();
-		chambers.put("Capintec CRC35R", CRC35R.class.getName());
-		chambers.put("Capintec CRC15R", CRC15R.class.getName());
-		chambers.put("Passive reader", PassiveReader.class.getName());
-		chambers.put("Random numbers", TestChamber.class.getName());
+		chambers.put(CHAM_CRC35, CRC35R.class.getName());
+		chambers.put(CHAM_CRC15, CRC15R.class.getName());
+		chambers.put(CHAM_READER, PassiveReader.class.getName());
+		chambers.put(CHAM_RND, TestChamber.class.getName());
 
 		units = new HashMap<String, Double>();
 		units.put("Bq", 1d);
