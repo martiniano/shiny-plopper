@@ -35,6 +35,8 @@ import jssc.SerialPort;
 
 public class PloppyProps {
 
+	public static final String SAVE_FILE = "sp.properties";
+
 	private File file;
 
 	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.baud";
@@ -136,7 +138,7 @@ public class PloppyProps {
 
 		// First try loading from the current directory
 		try {
-			File f = new File("sp.properties");
+			File f = new File(SAVE_FILE);
 			is = new FileInputStream(f);
 		} catch (FileNotFoundException e) {
 			// is remains null
@@ -145,7 +147,7 @@ public class PloppyProps {
 		try {
 			if (is == null) {
 				// Try loading from classpath
-				is = getClass().getResourceAsStream("sp.properties");
+				is = getClass().getResourceAsStream(SAVE_FILE);
 			}
 
 			// Try loading properties from the file (if found)
@@ -173,8 +175,8 @@ public class PloppyProps {
 
 		FileOutputStream fos = null;
 		try {
-
-			fos = new FileOutputStream(file);
+			File f = new File(SAVE_FILE);
+			fos = new FileOutputStream(f);
 			p.store(fos, " Shiny plopper save data ");
 
 		} catch (IOException e) {
