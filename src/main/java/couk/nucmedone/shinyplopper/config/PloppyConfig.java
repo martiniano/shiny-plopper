@@ -69,6 +69,7 @@ public class PloppyConfig {
 
 		stage = new Stage();
 		stage.setTitle("Configuration");
+
 		stage.setScene(new Scene(propsBox, 450, 450));
 
 		// Save props when hiding window

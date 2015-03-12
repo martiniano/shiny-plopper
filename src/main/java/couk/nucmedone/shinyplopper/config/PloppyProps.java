@@ -35,9 +35,12 @@ import jssc.SerialPort;
 
 public class PloppyProps {
 
+	private static final int DEFAULT_CONFIG_HEIGHT = 450;
+	private static final int DEFAULT_CONFIG_WIDTH = 450;
+	
+	public static final String HEIGHT = "config_height";
 	public static final String SAVE_FILE = "sp.properties";
-
-	private File file;
+	public static final String WIDTH = "config_width";
 
 	public static final String BAUD_RATE = "couk.nucmedone.shinyplopper.baud";
 	public static final String CHAMBER_TYPE = "couk.nucmedone.shinyplopper.type";
@@ -54,6 +57,7 @@ public class PloppyProps {
 	public static final Map<String, Integer> PARITIES = new HashMap<String, Integer>();
 
 	public static final Map<String, String> FRIENDLY_NAMES = new HashMap<String, String>();
+
 	static {
 		FRIENDLY_NAMES.put(BAUD_RATE, "Baud rate");
 		FRIENDLY_NAMES.put(CHAMBER_TYPE, "Chamber type");
@@ -89,6 +93,18 @@ public class PloppyProps {
 
 	public String getChamberType() {
 		return p.getProperty(CHAMBER_TYPE, Constants.CHAM_RND); // "Capintec CRC35R");
+	}
+	
+	public int getConfigHeight() {
+		
+		Object o = p.get(HEIGHT);
+		
+
+		
+	}
+	
+	public void setConfigWidth(int width) {
+		p.put(WIDTH, width);
 	}
 
 	public String getDevice() {
@@ -202,6 +218,14 @@ public class PloppyProps {
 
 	public void setChamberType(String chamberType) {
 		p.put(CHAMBER_TYPE, chamberType);
+	}
+	
+	public void setConfigHeight(int height) {
+		p.put(HEIGHT, height);
+	}
+	
+	public void setConfigWidth(int width) {
+		p.put(WIDTH, width);
 	}
 
 	public void setDevice(String device) {
