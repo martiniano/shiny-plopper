@@ -37,7 +37,7 @@ public class PloppyProps {
 
 	private static final int DEFAULT_CONFIG_HEIGHT = 450;
 	private static final int DEFAULT_CONFIG_WIDTH = 450;
-	
+
 	public static final String HEIGHT = "config_height";
 	public static final String SAVE_FILE = "sp.properties";
 	public static final String WIDTH = "config_width";
@@ -94,17 +94,31 @@ public class PloppyProps {
 	public String getChamberType() {
 		return p.getProperty(CHAMBER_TYPE, Constants.CHAM_RND); // "Capintec CRC35R");
 	}
-	
-	public int getConfigHeight() {
-		
-		Object o = p.get(HEIGHT);
-		
 
-		
+	public int getConfigHeight() {
+
+		int height = DEFAULT_CONFIG_HEIGHT;
+
+		Object o = p.get(HEIGHT);
+
+		if (o != null) {
+			height = Integer.parseInt((String) o);
+		}
+
+		return height;
+
 	}
-	
-	public void setConfigWidth(int width) {
-		p.put(WIDTH, width);
+
+	public int getConfigWidth() {
+
+		Object o = p.get(WIDTH);
+
+		int width = DEFAULT_CONFIG_WIDTH;
+		if (o != null) {
+			width = Integer.parseInt((String) o);
+		}
+
+		return width;
 	}
 
 	public String getDevice() {
@@ -219,13 +233,13 @@ public class PloppyProps {
 	public void setChamberType(String chamberType) {
 		p.put(CHAMBER_TYPE, chamberType);
 	}
-	
+
 	public void setConfigHeight(int height) {
-		p.put(HEIGHT, height);
+		p.put(HEIGHT, String.valueOf(height));
 	}
-	
+
 	public void setConfigWidth(int width) {
-		p.put(WIDTH, width);
+		p.put(WIDTH, String.valueOf(width));
 	}
 
 	public void setDevice(String device) {

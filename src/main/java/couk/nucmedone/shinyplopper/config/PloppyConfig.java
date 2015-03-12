@@ -69,14 +69,41 @@ public class PloppyConfig {
 
 		stage = new Stage();
 		stage.setTitle("Configuration");
+		
+		double w = props.getConfigWidth();
+		double h = props.getConfigHeight();
+		stage.setScene(new Scene(propsBox, w, h));
 
-		stage.setScene(new Scene(propsBox, 450, 450));
-
+		stage.setOnShowing(new EventHandler<WindowEvent>() {
+			
+			public void handle(WindowEvent arg0) {
+				
+				double ww = props.getConfigWidth();
+				stage.setWidth(ww);
+				
+				double hh = props.getConfigHeight();								
+				stage.setHeight(hh);			
+				
+			}
+			
+		});
+		
 		// Save props when hiding window
 		stage.setOnHiding(new EventHandler<WindowEvent>() {
 
 			public void handle(WindowEvent arg0) {
 
+				// Store height and width of the window
+				Double h = new Double(stage.getHeight());
+				final int hh = h.intValue();
+				System.out.println(h + " >> " + hh);
+				props.setConfigHeight(hh);
+				
+				Double w = new Double(stage.getWidth());
+				final int ww = w.intValue();
+				System.out.println(w + " >> " + ww);
+				props.setConfigWidth(ww);
+				
 				save();
 
 			}
