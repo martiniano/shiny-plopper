@@ -23,8 +23,6 @@ package couk.nucmedone.shinyplopper.chambers;
 import java.util.HashMap;
 import java.util.Map;
 
-import couk.nucmedone.shinyplopper.TestChamber;
-
 public class Constants {
 
 	public static final String CHAM_RND = "Random numbers";

@@ -1,7 +1,5 @@
-package couk.nucmedone.shinyplopper;
+package couk.nucmedone.shinyplopper.chambers;
 
-import couk.nucmedone.shinyplopper.chambers.AbstractChamber;
-import couk.nucmedone.shinyplopper.chambers.Reading;
 
 public class TestChamber extends AbstractChamber {
 
