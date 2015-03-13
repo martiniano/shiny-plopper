@@ -33,8 +33,9 @@ public class CalibratorScreen {
 
 	private GridPane grid = new GridPane();
 	private Reading readings = null;
-	private Label units = new Label("MBq");
-	private Label activity = new Label("1000.0");
+	private Label units = new Label("---");
+	private Label activity = new Label("----.-");
+	private Label nuclide = new Label("ZZ-000m");
 	private Label[] previousLists = new Label[10];
 
 	public CalibratorScreen(){
@@ -49,24 +50,32 @@ public class CalibratorScreen {
                 
         activity.setId("reading");
         units.setId("units");
+        nuclide.setId("nuclide");
         
         // Reading and units together... extra box for units to set bottom padding
         VBox unitBox = new VBox();
         unitBox.getChildren().add(units);
         unitBox.setPadding(new Insets(10));
-        unitBox.setAlignment(Pos.BOTTOM_LEFT);
+        unitBox.setAlignment(Pos.BOTTOM_RIGHT);
         
         HBox readWithUnits = new HBox();
-        readWithUnits.setAlignment(Pos.BOTTOM_LEFT);
+        readWithUnits.setAlignment(Pos.BOTTOM_RIGHT);
         readWithUnits.getChildren().addAll(activity, unitBox);
+        
+        // Nuclide box
+        HBox nuclideBox = new HBox();
+        nuclideBox.setAlignment(Pos.BOTTOM_RIGHT);
+        nuclideBox.getChildren().addAll(nuclide);
         
         grid.setId("reading-pane");
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.setAlignment(Pos.BOTTOM_CENTER);
+        grid.setAlignment(Pos.BOTTOM_LEFT);
         // Add previous readings in zeroth column (all rows)
         grid.add(previousVBox, 0, 0, 1, 3);
+        // Nuclide bit in 1st row
+        grid.add(nuclideBox, 2, 1);
         // Calibrator reading in 2nd row
         grid.add(readWithUnits, 2, 2);
 		
@@ -82,22 +91,30 @@ public class CalibratorScreen {
 	
 	public void update(){
 		
+		// Set current activity
 		final double currentReading = readings.getCurrentReading();
 		final double read = Reading.roundToSignificantFigures(currentReading, 5);
 		final String text = Double.toString(read);
 		
 		activity.setText(text);
 		
+		// Set units
+		units.setText(readings.getUnits().toString());
+		
+		// Set nuclide
+		nuclide.setText(readings.getNuclide().toString());
+		
 		final double[] prevs = readings.getReadings();
 		
-		for (int i=0; i<previousLists.length - 1; i++){
+		for (int i=0; i<previousLists.length; i++){
 			
 			final double last = Reading.roundToSignificantFigures(prevs[i], 5);
 			
 			StringBuffer buff = new StringBuffer(Double.toString(last));
+			buff.append(" ");
+			buff.append(units.getText());
 			
-			
-//			previousLists[i].setText(string);
+			previousLists[i].setText(buff.toString());
 		}
 		
 	}

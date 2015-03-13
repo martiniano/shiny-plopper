@@ -436,6 +436,8 @@ public class ShinyPlopper extends Application implements ActionListener,
 		try {
 			currentActivity = Double.parseDouble(activity.toString());
 			reading.addReading(currentActivity);
+			reading.setUnits(units);
+			reading.setNuclide(nuclide);
 
 			if (cal != null) {
 				Platform.runLater(new Runnable() {

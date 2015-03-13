@@ -28,6 +28,11 @@
 	-fx-padding: 6 6 4 6;
 }
 
+#nuclide {
+	-fx-text-fill: white;
+	-fx-font: 24px "System";
+}
+
 #reading {
 	-fx-text-fill: white;
 	-fx-font: 60px "System";

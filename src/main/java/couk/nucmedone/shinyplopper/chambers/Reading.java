@@ -23,12 +23,12 @@ package couk.nucmedone.shinyplopper.chambers;
 import couk.nucmedone.shinyplopper.config.PloppyProps;
 
 /**
- *
+ * 
  * @author neil
- *
+ * 
  *         Simple class to make the current, average and previous readings
  *         available. The readings can be reset by calling the reset() method.
- *
+ * 
  */
 public class Reading {
 
@@ -39,6 +39,8 @@ public class Reading {
 	private double tolerance;
 	private int minReadings;
 	private boolean isStable = false;
+	private CharSequence units;
+	private CharSequence nuclide;
 
 	public Reading() {
 
@@ -59,13 +61,13 @@ public class Reading {
 
 	/**
 	 * Add the new current reading to the object
-	 *
+	 * 
 	 * @param reading
 	 */
 	public void addReading(double reading) {
 
 		// Shift readings "up one"
-		for (int i = readings.length - 1; i>0;) {
+		for (int i = readings.length - 1; i > 0;) {
 			readings[i] = readings[--i];
 		}
 
@@ -97,7 +99,7 @@ public class Reading {
 
 	/**
 	 * Simply return the current reading
-	 *
+	 * 
 	 * @return
 	 */
 	public double getCurrentReading() {
@@ -106,7 +108,7 @@ public class Reading {
 
 	/**
 	 * Get all of the available readings
-	 *
+	 * 
 	 * @return
 	 */
 	public double[] getReadings() {
@@ -115,7 +117,7 @@ public class Reading {
 
 	/**
 	 * get the average of all of the available readings
-	 *
+	 * 
 	 * @return
 	 */
 	public double getRunningAverage() {
@@ -125,8 +127,9 @@ public class Reading {
 	/**
 	 * Query whether or not the range of readings is above a pre-determined
 	 * threshold (defaults to 2%)
-	 *
-	 * @return True if the range of readings differs by less than (say) 2% of the mean
+	 * 
+	 * @return True if the range of readings differs by less than (say) 2% of
+	 *         the mean
 	 */
 	public boolean isStable() {
 		return isStable;
@@ -140,21 +143,36 @@ public class Reading {
 			readings[i] = Double.NaN;
 		}
 	}
-	
+
 	public static double roundToSignificantFigures(double num, int n) {
 
-		if(num == 0) {
-	        return 0;
-	    }
+		if (num == 0) {
+			return 0;
+		}
 
-	    final double d = Math.ceil(Math.log10(num < 0 ? -num: num));
-	    final int power = n - (int) d;
+		final double d = Math.ceil(Math.log10(num < 0 ? -num : num));
+		final int power = n - (int) d;
 
-	    final double magnitude = Math.pow(10, power);
-	    final long shifted = Math.round(num*magnitude);
-	    
-	    return shifted/magnitude;
+		final double magnitude = Math.pow(10, power);
+		final long shifted = Math.round(num * magnitude);
+
+		return shifted / magnitude;
 	}
 
+	public CharSequence getUnits() {
+		return units;
+	}
+
+	public void setUnits(CharSequence units) {
+		this.units = units;
+	}
+
+	public CharSequence getNuclide() {
+		return nuclide;
+	}
+
+	public void setNuclide(CharSequence nuclide) {
+		this.nuclide = nuclide;
+	}
 
 }
