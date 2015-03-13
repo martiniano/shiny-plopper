@@ -41,9 +41,12 @@ public class PloppyConfig {
 	private final Stage stage;
 	private final PloppyProps props;
 	private final ArrayList<ConfigItem> configItems;
+	private final ConfigListener cl;
 
-	public PloppyConfig() {
+	public PloppyConfig(ConfigListener listener) {
 
+		cl = listener;
+		
 		props = new PloppyProps();
 
 		// Line up everything vertically
@@ -108,6 +111,8 @@ public class PloppyConfig {
 				props.setConfigWidth(ww);
 				
 				save();
+				
+				cl.onConfigClose();
 
 			}
 		});
@@ -136,7 +141,7 @@ public class PloppyConfig {
 		return FXCollections.observableArrayList(Constants.chambers.keySet());
 
 	}
-
+	
 	private void configItem(String name, String item) {
 
 		StringConfigItem configItem = new StringConfigItem(name, item);

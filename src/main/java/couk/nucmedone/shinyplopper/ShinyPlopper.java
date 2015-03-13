@@ -62,13 +62,14 @@ import couk.nucmedone.shinyplopper.chambers.ChamberListener;
 import couk.nucmedone.shinyplopper.chambers.Reading;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreen;
 import couk.nucmedone.shinyplopper.clickscreen.ClickScreenListener;
+import couk.nucmedone.shinyplopper.config.ConfigListener;
 import couk.nucmedone.shinyplopper.config.PloppyConfig;
 import couk.nucmedone.shinyplopper.config.PloppyProps;
 import couk.nucmedone.shinyplopper.hooks.KeyPlopper;
 import couk.nucmedone.shinyplopper.hooks.MousePlopper;
 
 public class ShinyPlopper extends Application implements ActionListener,
-		ChamberListener, ClickScreenListener {
+		ChamberListener, ClickScreenListener, ConfigListener {
 
 	public static void main(String[] args) {
 		launch(args);
@@ -95,10 +96,9 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	private AbstractChamber chamber = null;
 	private final ChamberListener listener = this;
+	private final ConfigListener cl = this;
 
 	private CalibratorScreen cal = null;
-
-	// private boolean clickerOn = false;
 
 	public ShinyPlopper() {
 
@@ -113,25 +113,42 @@ public class ShinyPlopper extends Application implements ActionListener,
 		Platform.runLater(new Runnable() {
 			public void run() {
 
-				config = new PloppyConfig();
+				config = new PloppyConfig(cl);
 				props = new PloppyProps();
-
+				
 				// Robot class that will drop readings into other windows owned
 				// by the OS
 				try {
-
 					robot = new Robot();
+				} catch (AWTException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		
+		// Let's go!
+		reset();
+	}
+
+	protected void reset() {
+		
+		Platform.runLater(new Runnable() {
+			public void run() {
+
+				try {
 
 					String type = props.getChamberType();
 					String name = Constants.chambers.get(type);
 					chamber = this.getClass().getClassLoader().loadClass(name)
 							.asSubclass(AbstractChamber.class).newInstance();
 					// Go, go , go!
-					
+
 					// listen for updates
 					chamber.addListener(listener);
 
 					String refresh = props.getRefreshRate();
+					
 					long refreshRate;
 					try {
 						refreshRate = Long.parseLong(refresh);
@@ -142,18 +159,19 @@ public class ShinyPlopper extends Application implements ActionListener,
 					}
 
 					// Schedule
-					ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+					ScheduledExecutorService exec = Executors
+							.newSingleThreadScheduledExecutor();
 					Runnable runner = chamber;
-					exec.scheduleAtFixedRate(chamber, refreshRate, refreshRate, TimeUnit.MILLISECONDS);
+					exec.scheduleAtFixedRate(chamber, refreshRate, refreshRate,
+							TimeUnit.MILLISECONDS);
 
 				} catch (InstantiationException | IllegalAccessException
-						| ClassNotFoundException | AWTException e) {
+						| ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 
 			}
 		});
-
 	}
 
 	public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -166,7 +184,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	/**
 	 * Create an entry in the system tray
-	 *
+	 * 
 	 * @param stage
 	 */
 	private void createTrayIcon(final Stage stage, ActionListener listener) {
@@ -407,28 +425,29 @@ public class ShinyPlopper extends Application implements ActionListener,
 	// clickerOn = onOff;
 	// }
 
-	public void onActivityUpdate(CharSequence activity, CharSequence nuclide, CharSequence units) {
-		
+	public void onActivityUpdate(CharSequence activity, CharSequence nuclide,
+			CharSequence units) {
+
 		this.activity = activity;
 		this.nuclide = nuclide;
 		this.units = units;
-		
+
 		double currentActivity = Double.NaN;
 		try {
 			currentActivity = Double.parseDouble(activity.toString());
 			reading.addReading(currentActivity);
-			
-			if(cal != null){
+
+			if (cal != null) {
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
 						cal.setReadings(reading);
 						cal.update();
 					}
-					
+
 				});
 			}
-			
+
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
@@ -438,7 +457,7 @@ public class ShinyPlopper extends Application implements ActionListener,
 	public void queryChamber() {
 		show();
 		// clickScreenOn(true);
-		 showClickcreen();
+		showClickcreen();
 	}
 
 	public void show() {
@@ -449,5 +468,10 @@ public class ShinyPlopper extends Application implements ActionListener,
 				stage.requestFocus();
 			}
 		});
+	}
+
+	@Override
+	public void onConfigClose() {
+		reset();
 	}
 }
