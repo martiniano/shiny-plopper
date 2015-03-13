@@ -28,6 +28,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -69,6 +70,8 @@ public class PloppyConfig {
 
 		stage = new Stage();
 		stage.setTitle("Configuration");
+		Image ico = new Image("couk/nucmedone/shinyplopper/images/configure-3-16.png");
+		stage.getIcons().add(ico);
 		
 		double w = props.getConfigWidth();
 		double h = props.getConfigHeight();
