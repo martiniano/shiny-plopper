@@ -32,6 +32,20 @@ import couk.nucmedone.shinyplopper.config.PloppyProps;
  */
 public class Reading {
 
+	public static double roundToSignificantFigures(double num, int n) {
+
+		if (num == 0) {
+			return 0;
+		}
+
+		final double d = Math.ceil(Math.log10(num < 0 ? -num : num));
+		final int power = n - (int) d;
+
+		final double magnitude = Math.pow(10, power);
+		final long shifted = Math.round(num * magnitude);
+
+		return shifted / magnitude;
+	}
 	private final double[] readings;
 	private double mean = Double.NaN;
 	private double current = Double.NaN;
@@ -40,6 +54,7 @@ public class Reading {
 	private int minReadings;
 	private boolean isStable = false;
 	private CharSequence units;
+
 	private CharSequence nuclide;
 
 	public Reading() {
@@ -106,6 +121,10 @@ public class Reading {
 		return current;
 	}
 
+	public CharSequence getNuclide() {
+		return nuclide;
+	}
+
 	/**
 	 * Get all of the available readings
 	 * 
@@ -122,6 +141,10 @@ public class Reading {
 	 */
 	public double getRunningAverage() {
 		return mean;
+	}
+
+	public CharSequence getUnits() {
+		return units;
 	}
 
 	/**
@@ -144,35 +167,12 @@ public class Reading {
 		}
 	}
 
-	public static double roundToSignificantFigures(double num, int n) {
-
-		if (num == 0) {
-			return 0;
-		}
-
-		final double d = Math.ceil(Math.log10(num < 0 ? -num : num));
-		final int power = n - (int) d;
-
-		final double magnitude = Math.pow(10, power);
-		final long shifted = Math.round(num * magnitude);
-
-		return shifted / magnitude;
-	}
-
-	public CharSequence getUnits() {
-		return units;
+	public void setNuclide(CharSequence nuclide) {
+		this.nuclide = nuclide;
 	}
 
 	public void setUnits(CharSequence units) {
 		this.units = units;
-	}
-
-	public CharSequence getNuclide() {
-		return nuclide;
-	}
-
-	public void setNuclide(CharSequence nuclide) {
-		this.nuclide = nuclide;
 	}
 
 }

@@ -131,49 +131,6 @@ public class ShinyPlopper extends Application implements ActionListener,
 		reset();
 	}
 
-	protected void reset() {
-		
-		Platform.runLater(new Runnable() {
-			public void run() {
-
-				try {
-
-					String type = props.getChamberType();
-					String name = Constants.chambers.get(type);
-					chamber = this.getClass().getClassLoader().loadClass(name)
-							.asSubclass(AbstractChamber.class).newInstance();
-					// Go, go , go!
-
-					// listen for updates
-					chamber.addListener(listener);
-
-					String refresh = props.getRefreshRate();
-					
-					long refreshRate;
-					try {
-						refreshRate = Long.parseLong(refresh);
-					} catch (NumberFormatException nfe) {
-						System.out.println("Unable to set refreshrate "
-								+ refresh + ", defaulting to 1000ms");
-						refreshRate = 1000;
-					}
-
-					// Schedule
-					ScheduledExecutorService exec = Executors
-							.newSingleThreadScheduledExecutor();
-					Runnable runner = chamber;
-					exec.scheduleAtFixedRate(chamber, refreshRate, refreshRate,
-							TimeUnit.MILLISECONDS);
-
-				} catch (InstantiationException | IllegalAccessException
-						| ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
-	}
-
 	public void actionPerformed(java.awt.event.ActionEvent e) {
 
 		if (Commands.TC_READ_AND_DROP.equals(e.getActionCommand())) {
@@ -308,6 +265,48 @@ public class ShinyPlopper extends Application implements ActionListener,
 
 	}
 
+	public void onActivityUpdate(CharSequence activity, CharSequence nuclide,
+			CharSequence units) {
+
+		this.activity = activity;
+		this.nuclide = nuclide;
+		this.units = units;
+
+		double currentActivity = Double.NaN;
+		try {
+			currentActivity = Double.parseDouble(activity.toString());
+			reading.addReading(currentActivity);
+			reading.setUnits(units);
+			reading.setNuclide(nuclide);
+
+			if (cal != null) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						cal.setReadings(reading);
+						cal.update();
+					}
+
+				});
+			}
+
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public void onConfigClose() {
+		reset();
+	}
+
+	public void queryChamber() {
+		show();
+		// clickScreenOn(true);
+		showClickcreen();
+	}
+
 	/**
 	 * Register native hooks for keyboard and mouse events outside the JRE
 	 */
@@ -325,6 +324,49 @@ public class ShinyPlopper extends Application implements ActionListener,
 		// Add the key listener straight away - always listen for action keys
 		GlobalScreen.getInstance().addNativeKeyListener(keyPlopper);
 
+	}
+
+	protected void reset() {
+		
+		Platform.runLater(new Runnable() {
+			public void run() {
+
+				try {
+
+					String type = props.getChamberType();
+					String name = Constants.chambers.get(type);
+					chamber = this.getClass().getClassLoader().loadClass(name)
+							.asSubclass(AbstractChamber.class).newInstance();
+					// Go, go , go!
+
+					// listen for updates
+					chamber.addListener(listener);
+
+					String refresh = props.getRefreshRate();
+					
+					long refreshRate;
+					try {
+						refreshRate = Long.parseLong(refresh);
+					} catch (NumberFormatException nfe) {
+						System.out.println("Unable to set refreshrate "
+								+ refresh + ", defaulting to 1000ms");
+						refreshRate = 1000;
+					}
+
+					// Schedule
+					ScheduledExecutorService exec = Executors
+							.newSingleThreadScheduledExecutor();
+					Runnable runner = chamber;
+					exec.scheduleAtFixedRate(chamber, refreshRate, refreshRate,
+							TimeUnit.MILLISECONDS);
+
+				} catch (InstantiationException | IllegalAccessException
+						| ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
 	}
 
 	public void screenClickCancel() {
@@ -370,6 +412,20 @@ public class ShinyPlopper extends Application implements ActionListener,
 		button.setMinWidth(16);
 		button.setMaxWidth(16);
 
+	}
+
+	// public void clickScreenOn(boolean onOff) {
+	// clickerOn = onOff;
+	// }
+
+	public void show() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+				stage.show();
+				stage.toFront();
+				stage.requestFocus();
+			}
+		});
 	}
 
 	public void showClickcreen() {
@@ -419,61 +475,5 @@ public class ShinyPlopper extends Application implements ActionListener,
 			robot.keyPress(code);
 			robot.keyRelease(code);
 		}
-	}
-
-	// public void clickScreenOn(boolean onOff) {
-	// clickerOn = onOff;
-	// }
-
-	public void onActivityUpdate(CharSequence activity, CharSequence nuclide,
-			CharSequence units) {
-
-		this.activity = activity;
-		this.nuclide = nuclide;
-		this.units = units;
-
-		double currentActivity = Double.NaN;
-		try {
-			currentActivity = Double.parseDouble(activity.toString());
-			reading.addReading(currentActivity);
-			reading.setUnits(units);
-			reading.setNuclide(nuclide);
-
-			if (cal != null) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						cal.setReadings(reading);
-						cal.update();
-					}
-
-				});
-			}
-
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void queryChamber() {
-		show();
-		// clickScreenOn(true);
-		showClickcreen();
-	}
-
-	public void show() {
-		Platform.runLater(new Runnable() {
-			public void run() {
-				stage.show();
-				stage.toFront();
-				stage.requestFocus();
-			}
-		});
-	}
-
-	@Override
-	public void onConfigClose() {
-		reset();
 	}
 }
